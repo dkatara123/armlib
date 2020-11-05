@@ -1,0 +1,197 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "namespaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "namespaceSkuName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "namespaceSkuTier": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "namespaceSkuCapacity": {
+            "type": "int",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": 1
+        },
+        "topics": {
+            "type": "array",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "queues": {
+            "type": "array",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "virtualNetworkResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the subnet from which the private IP will be allocated."
+            }
+        },
+        "privateEndpointServices": {
+            "type": "string"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Service bus with private endpoints, topics and queues.",
+            "name": "[concat(parameters('uniqueString'),'-sr-01.servicebus.json-',parameters('indexNo'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/SingleResourceProviders/ServiceBus/sr-01.servicebus.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "uniqueString": {
+                        "value": "[parameters('uniqueString')]"
+                    },
+                    "_artifactsStorageSASToken": {
+                        "value": "[parameters('_artifactsStorageSASToken')]"
+                    },
+                    "_artifactsStorageContainerUrl": {
+                        "value": "[parameters('_artifactsStorageContainerUrl')]"
+                    },
+                    "namespaceName": {
+                        "value": "[parameters('namespaceName')]"
+                    },
+                    "namespaceSkuName": {
+                        "value": "[parameters('namespaceSkuName')]"
+                    },
+                    "namespaceSkuTier": {
+                        "value": "[parameters('namespaceSkuTier')]"
+                    },
+                    "namespaceSkuCapacity": {
+                        "value": "[parameters('namespaceSkuCapacity')]"
+                    },
+                    "topics": {
+                        "value": "[parameters('topics')]"
+                    },
+                    "queues": {
+                        "value": "[parameters('queues')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-sr-01.servicebus.json-',parameters('indexNo'))]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('namespaceName'),'-pep')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2020-04-01/r01.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[concat('pep-',parameters('namespaceName'),'-',parameters('privateEndpointServices'))]"
+                    },
+                    "virtualNetworkId": {
+                        "value": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "privateLinkServiceId": {
+                        "value": "[resourceId('Microsoft.ServiceBus/namespaces',parameters('namespaceName'))]"
+                    },
+                    "groupIds": {
+                        "value": [
+                            "[parameters('privateEndpointServices')]"
+                        ]
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('namespaceName'),'-pep')]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('namespaceName'),'-dnszones')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "privateEndpointName": {
+                        "value": "[concat('pep-',parameters('namespaceName'),'-',parameters('privateEndpointServices'))]"
+                    },
+                    "virtualNetworkResourceGroupName": {
+                        "value": "[parameters('virtualNetworkResourceGroupName')]"
+                    },
+                    "privateDnsZone": {
+                        "value": "[parameters('privateEndpointServices')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

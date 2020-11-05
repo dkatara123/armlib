@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceName": {
+            "value": "idd-dv42-eastus-sqlsvr1/master"
+        },
+        "diagnosticSettingsName": {
+            "value": "SQLSecurityAuditEvents_3d229c42-c7e7-4c97-9a99-ec0d0d8b86c1"
+        },
+        "workspaceId": {
+            "value": "/subscriptions/44328f0f-3fad-40a5-ae95-390f5b1a0d8c/resourcegroups/co-np-eastus-iddloganalytics-rg/providers/microsoft.operationalinsights/workspaces/co-np-eastus-idd1-workspace"
+        },
+        "logAnalyticsDestinationType": {
+            "value": "AzureDiagnostics"
+        },
+        "metrics": {
+            "value": []
+        },
+        "logs": {
+            "value": [
+                {
+                    "category": "SQLSecurityAuditEvents",
+                    "enabled": true,
+                    "retentionPolicy": {
+                        "days": 0,
+                        "enabled": true
+                    }
+                }
+            ]
+        }
+    }
+}

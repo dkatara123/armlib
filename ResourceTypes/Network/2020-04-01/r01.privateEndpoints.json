@@ -1,0 +1,85 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the private endpoint."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "tags": {
+            "type": "object",
+            "metadata": {
+                "description": "Optional. A maximum of 15 tags can be provided for a resource. Each tag must have a key with a length no greater than 128 characters and a value with a length no greater than 256 characters."
+            },
+            "defaultValue": {
+            }
+        },
+        "virtualNetworkId": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The ID of the virtual network from which the private IP will be allocated."
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the subnet from which the private IP will be allocated."
+            }
+        },
+        "privateLinkServiceId": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. Resource ID of resource for which private endpoint is required."
+            }
+        },
+        "groupIds": {
+            "type": "array",
+            "metadata": {
+                "description": "Required. Refer ARM-Templates/ResourceTypes/Network/r01.applicationGateways.json for Group Ids."
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2020-04-01",
+            "comments": "",
+            "location": "[parameters('location')]",
+            "name": "[parameters('name')]",
+            "tags": "[parameters('tags')]",
+            "properties": {
+                "subnet": {
+                    "id": "[concat(parameters('virtualNetworkId'),'/subnets/',parameters('subnetName'))]"
+                },
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[parameters('name')]",
+                        "properties": {
+                            "groupIds": "[parameters('groupIds')]",
+                            "privateLinkServiceId": "[parameters('privateLinkServiceId')]"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "networkInterfaceId": {
+            "value": "[reference(parameters('name'),'2020-04-01').networkInterfaces[0].id]",
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+            "type": "string"
+        },
+        "keyVaultName": {
+            "type": "string"
+        },
+        "keyName": {
+            "type": "string"
+        },
+        "keyVersion": {
+            "type": "string"
+        },
+        "serverKeyType": {
+            "metadata": {
+                "description": "The server key type like 'ServiceManaged', 'AzureKeyVault'. - ServiceManaged or AzureKeyVault"
+            },
+            "type": "string"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "serverKeyName": "[concat(parameters('keyVaultName'),'_',parameters('keyName'),'_',parameters('keyVersion'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('sqlServerName'),'/current')]",
+            "type": "Microsoft.Sql/servers/encryptionProtector",
+            "apiVersion": "2015-05-01-preview",
+            "properties": {
+                "serverKeyName": "[variables('serverKeyName')]",
+                "serverKeyType": "[parameters('serverKeyType')]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

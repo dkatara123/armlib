@@ -1,0 +1,23 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "stouseiddblob1dv40ep"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/44328f0f-3fad-40a5-ae95-390f5b1a0d8c/resourceGroups/co-np-eastus-iddvnet-rg/providers/Microsoft.Network/virtualNetworks/CO-NP-eastus-IDD-vnet"
+        },
+        "subnetName": {
+            "value": "co-np-eastus-IDD-DevPEP1-subnet"
+        },
+        "privateLinkServiceId": {
+            "value": "/subscriptions/44328f0f-3fad-40a5-ae95-390f5b1a0d8c/resourceGroups/rgp-idd-blob-dv40/providers/Microsoft.Storage/storageAccounts/stouseiddblob1dv40"
+        },
+        "groupIds": {
+            "value": [
+                "blob"
+            ]
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateDnsZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDnsZoneName'), '/@')]",
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1,
+                    "minimumTtl": 300
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

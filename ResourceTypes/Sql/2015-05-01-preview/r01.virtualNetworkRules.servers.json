@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "metadata": {
+                "description": "The name of the virtual network rule."
+            },
+            "type": "string"
+        },
+        "sqlServerName": {
+            "metadata": {
+                "description": "Name of SQL Server for which rule will be created."
+            },
+            "type": "string"
+        },
+        "virtualNetworkSubnetId": {
+            "metadata": {
+                "description": "The ARM resource id of the virtual network subnet."
+            },
+            "type": "string"
+        },
+        "ignoreMissingVnetServiceEndpoint": {
+            "metadata": {
+                "description": "Create firewall rule before the virtual network has vnet service endpoint enabled."
+            },
+            "type": "bool",
+            "defaultValue": true
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('sqlServerName'),'/',parameters('name'))]",
+            "type": "Microsoft.Sql/servers/virtualNetworkRules",
+            "apiVersion": "2015-05-01-preview",
+            "properties": {
+                "virtualNetworkSubnetId": "[parameters('virtualNetworkSubnetId')]",
+                "ignoreMissingVnetServiceEndpoint": "[parameters('ignoreMissingVnetServiceEndpoint')]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

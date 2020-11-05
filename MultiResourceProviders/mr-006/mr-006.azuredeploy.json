@@ -1,0 +1,86 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring",
+            "defaultValue": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "userAssignedIdentityName": {
+            "type": "string"
+        },
+        "roleDefinitionGuid": {
+            "type": "string",
+            "metadata": {
+                "description": "The role definition guid assigned to role. Refer ID for built-in roles - https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#all"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {
+        "userAssignedIdentityDeploymentName": "[concat(parameters('uniqueString'),'-',parameters('userAssignedIdentityName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "Deploys User Assigned Managed Identity.",
+            "name": "[variables('userAssignedIdentityDeploymentName')]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "responseContent, requestContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/ManagedIdentity/2018-11-30/r01.userAssignedIdentities.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('userAssignedIdentityName')]"
+                    }
+                }
+            }
+        },
+        {
+            "dependsOn": [ "[variables('userAssignedIdentityDeploymentName')]" ],
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "Assign User-Assigned-Managed-Identity access to resourceGroup.",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('roleDefinitionGuid'),'-',parameters('indexNo'))]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "responseContent, requestContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Authorization/2018-09-01-preview/r01.roleAssignments.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "roleDefinitionGuid": {
+                        "value": "[parameters('roleDefinitionGuid')]"
+                    },
+                    "principalId": {
+                        "value": "[reference(variables('userAssignedIdentityDeploymentName')).outputs.principalId.value]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

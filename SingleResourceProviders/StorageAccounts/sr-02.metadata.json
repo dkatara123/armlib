@@ -1,0 +1,6 @@
+{
+  "type": "SingleResourceProviders",
+  "Id": "sr-02",
+  "displayName": "Blob storage account with containers.",
+  "description": ""
+}

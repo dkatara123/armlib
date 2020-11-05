@@ -1,0 +1,154 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "keyVaultName": {
+            "type": "string"
+        },
+        "networkAcls": {
+            "type": "object",
+            "metadata": {
+                "description": "Rules governing the accessibility of the key vault from specific network locations. "
+            }
+        },
+        "privateEndpointVnetResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateEndpointVnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateEndpointSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateEndpointServices": {
+            "type": "string"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "privateEndpointVnetResourceId": "[resourceId(parameters('privateEndpointVnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('privateEndpointVnetName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('uniqueString'),'-r01.vaults.json-',parameters('indexNo'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/KeyVault/2019-09-01/r01.vaults.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('keyVaultName')]"
+                    },
+                    "networkAcls": {
+                        "value": "[parameters('networkAcls')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-r01.vaults.json-',parameters('indexNo'))]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-pep')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2020-04-01/r01.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[concat('pep-',parameters('keyVaultName'),'-',parameters('privateEndpointServices'))]"
+                    },
+                    "virtualNetworkId": {
+                        "value": "[variables('privateEndpointVnetResourceId')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('privateEndpointSubnetName')]"
+                    },
+                    "privateLinkServiceId": {
+                        "value": "[resourceId('Microsoft.KeyVault/vaults',parameters('keyVaultName'))]"
+                    },
+                    "groupIds": {
+                        "value": [
+                            "[parameters('privateEndpointServices')]"
+                        ]
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-pep')]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-dnszones')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "privateEndpointName": {
+                        "value": "[concat('pep-',parameters('keyVaultName'),'-',parameters('privateEndpointServices'))]"
+                    },
+                    "virtualNetworkResourceGroupName": {
+                        "value": "[parameters('privateEndpointVnetResourceGroup')]"
+                    },
+                    "privateDnsZone": {
+                        "value": "[parameters('privateEndpointServices')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

@@ -1,0 +1,184 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "webAppName": {
+            "type": "string"
+        },
+        "serverFarmName": {
+            "type": "string"
+        },
+        "serverFarmResourceGroup": {
+            "type": "string"
+        },
+        "alwaysOn": {
+            "type": "bool"
+        },
+        "ipSecurityRestrictions": {
+            "type": "array"
+        },
+        "kind": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. Kind of resource."
+            },
+            "allowedValues": [
+                "app"
+            ]
+        },
+        "appCommandLine": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        },
+        "applicationInsightsName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "applicationInsightsResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "vnetIntegrationVnetResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "vnetIntegrationVnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "vnetIntegrationSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[concat(parameters('uniqueString'),'-',parameters('webAppName'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Web/2018-11-01/r02.sites.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('webAppName')]"
+                    },
+                    "hostingPlanName": {
+                        "value": "[parameters('serverFarmName')]"
+                    },
+                    "serverFarmResourceGroup": {
+                        "value": "[parameters('serverFarmResourceGroup')]"
+                    },
+                    "alwaysOn": {
+                        "value": "[parameters('alwaysOn')]"
+                    },
+                    "ipSecurityRestrictions": {
+                        "value": "[parameters('ipSecurityRestrictions')]"
+                    },
+                    "kind": {
+                        "value": "[parameters('kind')]"
+                    },
+                    "appCommandLine": {
+                        "value": "[parameters('appCommandLine')]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
+                    },
+                    "applicationInsightsName": {
+                        "value": "[parameters('applicationInsightsName')]"
+                    },
+                    "applicationInsightsResourceGroup": {
+                        "value": "[parameters('applicationInsightsResourceGroup')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('webAppName'))]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('webAppName'),'-vnet')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Web/2019-08-01/r01.vnet.config.sites.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "webAppName": {
+                        "value": "[parameters('webAppName')]"
+                    },
+                    "vnetResourceGroupName": {
+                        "value": "[parameters('vnetIntegrationVnetResourceGroup')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetIntegrationVnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('vnetIntegrationSubnetName')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

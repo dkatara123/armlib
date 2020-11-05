@@ -1,0 +1,73 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountName": {
+            "metadata": {
+                "description": "Required. StorageAccount Name. Supported StorageAccount type Storage, StorageV2, BlobStorage."
+            },
+            "type": "string"
+        },
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the blob container within the specified storage account. Blob container names must be between 3 and 63 characters in length and use numbers, lower-case letters and dash (-) only. Every dash (-) character must be immediately preceded and followed by a letter or number."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "tags": {
+            "type": "object",
+            "metadata": {
+                "description": "Optional. A maximum of 15 tags can be provided for a resource. Each tag must have a key with a length no greater than 128 characters and a value with a length no greater than 256 characters."
+            },
+            "defaultValue": {
+            }
+        },
+        "publicAccess": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Default value is 'None'. Specifies whether data in the container may be accessed publicly and the level of access. - Container, Blob, None"
+            },
+            "allowedValues": [
+                "Container",
+                "Blob",
+                "None"
+            ],
+            "defaultValue": "None"
+        },
+        "metadata": {
+            "type": "object",
+            "metadata": {
+                "desccription": "Optional. Default value is {}. A name-value pair to associate with the container as metadata."
+            },
+            "defaultValue": {
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "comments": "",
+            "name": "[concat(parameters('storageAccountName'),'/default/',parameters('name'))]",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "properties": {
+                "metadata": "[parameters('metadata')]",
+                "publicAccess": "[parameters('publicAccess')]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

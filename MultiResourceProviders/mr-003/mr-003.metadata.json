@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-003",
+  "displayName": "General storage v2 account with multi containers, fileShares and private endpoints.",
+  "description": ""
+}

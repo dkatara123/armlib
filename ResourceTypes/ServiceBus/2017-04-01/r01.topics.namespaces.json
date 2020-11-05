@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The topic name."
+            }
+        },
+        "namespace": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The namespace name."
+            }
+        },
+        "enablePartitioning": {
+            "type": "bool",
+            "metadata": {
+                "description": "Optional.Value that indicates whether the topic to be partitioned across multiple message brokers is enabled. Note - partitioning entities are not supported"
+            },
+            "defaultValue": true
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('namespace'),'/',parameters('name'))]",
+            "type": "Microsoft.ServiceBus/namespaces/topics",
+            "apiVersion": "2017-04-01",
+            "properties": {
+                "enablePartitioning": "[parameters('enablePartitioning')]"
+            },
+            "resources": [
+            ]
+        }
+    ],
+    "outputs": {
+    }
+}

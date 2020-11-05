@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "webAppName": {
+            "type": "string"
+        },
+        "vnetResourceGroupName": {
+            "type": "string"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('webAppName'),'/virtualNetwork')]",
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2019-08-01",
+            "properties": {
+                "subnetResourceId": "[resourceId(parameters('vnetResourceGroupName'),'Microsoft.Network/virtualNetworks/subnets',parameters('vnetName'),parameters('subnetName'))]",
+                "swiftSupported": true
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

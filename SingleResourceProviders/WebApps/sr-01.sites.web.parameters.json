@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "https://conpeusiddartifacts01sa.blob.core.windows.net/published-artifacts"
+        },
+        "webAppName": {
+            "value": "app-use-idd-tomgw1-dv42"
+        },
+        "serverFarmName": {
+            "value": "asp-use-idd-tom1-dv42"
+        },
+        "serverFarmResourceGroup": {
+            "value": "rgp-idd-webapp-dv42"
+        },
+        "alwaysOn": {
+            "value": true
+        },
+        "linuxFxVersion": {
+            "value": "TOMCAT|9.0-jre8"
+        },
+        "ipSecurityRestrictions": {
+            "value": [
+                {
+                    "vnetResourceGroupName": "co-np-eastus-iddvnet-rg",
+                    "vnetName": "CO-NP-eastus-IDD-vnet",
+                    "subnetName": "co-np-eastus-IDD-AppGW-subnet",
+                    "action": "Allow",
+                    "tag": "Default",
+                    "priority": 1001,
+                    "name": "idd-d1-tomgw1-access-allow",
+                    "description": "idd-d1-tomgw1-access-allow"
+                },
+                {
+                    "vnetResourceGroupName": "co-np-eastus-iddvnet-rg",
+                    "vnetName": "CO-NP-eastus-IDD-vnet",
+                    "subnetName": "co-np-eastus-IDD-QAAppService-subnet",
+                    "action": "Allow",
+                    "tag": "Default",
+                    "priority": 1002,
+                    "name": "idd-d1-app1-access-allow",
+                    "description": "idd-d1-app1-access-allow"
+                }
+            ]
+        },
+        "kind": {
+            "value": "app,linux"
+        },
+        "userManagedIdentityName": {
+            "value": "umi-use-idd-deploymentscripts-dv42"
+        },
+        "storageAccountName": {
+            "value": "stouseiddblob1dv42"
+        },
+        "mountPaths": {
+            "value": [
+                {
+                    "shareName": "astrusfiles",
+                    "path": "/astrusfiles"
+                },
+                {
+                    "shareName": "kyc", // use "null" when hasMountPaths value if false.
+                    "path": "/kyc" // use "null" when hasMountPaths value if false.
+                }
+            ]
+        },
+        "hasMountPaths": {
+            "value": false
+        },
+        "storageAccountResourceGroup": {
+            "value": ""
+        },
+        "uniqueString": {
+            "value": ""
+        },
+        "indexNo": {
+            "value": 0
+        }
+    }
+}

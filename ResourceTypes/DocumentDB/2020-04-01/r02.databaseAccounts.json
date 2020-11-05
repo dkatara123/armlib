@@ -1,0 +1,177 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. Cosmos DB database account name."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. The location of the resource group to which the resource belongs."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "kind": {
+            "type": "string",
+            "metadata": {
+                "description": "Indicates the type of database account. This can only be set at database account creation. - GlobalDocumentDB, MongoDB, Parse"
+            },
+            "allowedValues": [
+                "GlobalDocumentDB",
+                "MongoDB",
+                "Parse"
+            ]
+        },
+        "geoReplicationLocations": {
+            "type": "array",
+            "metadata": {
+                "description": "An array that contains the georeplication locations enabled for the Cosmos DB account. "
+            },
+            "defaultValue": [
+            ]
+        },
+        "singleGeoReplication": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "serverVersion": {
+            "defaultValue": "3.2",
+            "allowedValues": [
+                "3.2",
+                "3.6"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the MongoDB server version to use."
+            }
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[parameters('name')]",
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2020-04-01",
+            "location": "[parameters('location')]",
+            "tags": {
+            },
+            "kind": "[parameters('kind')]",
+            "properties": {
+                "copy": [
+                    {
+                        "name": "locations",
+                        "count": "[if(parameters('singleGeoReplication'),1,length(parameters('geoReplicationLocations')))]",
+                        "input": {
+                            "locationName": "[if(parameters('singleGeoReplication'),parameters('location'),parameters('geoReplicationLocations')[copyIndex('locations')].locationName)]",
+                            "failoverPriority": "[if(parameters('singleGeoReplication'),0,parameters('geoReplicationLocations')[copyIndex('locations')].failoverPriority)]",
+                            "isZoneRedundant": false
+                        }
+                    }
+                ],
+                "databaseAccountOfferType": "Standard",
+                "publicNetworkAccess": "Enabled",
+                "apiProperties": {
+                    "serverVersion": "[parameters('serverVersion')]"
+                },
+                "ipRules": [
+                    {
+                        "ipAddressOrRange": "104.42.195.92"
+                    },
+                    {
+                        "ipAddressOrRange": "40.76.54.131"
+                    },
+                    {
+                        "ipAddressOrRange": "52.176.6.30"
+                    },
+                    {
+                        "ipAddressOrRange": "52.169.50.45"
+                    },
+                    {
+                        "ipAddressOrRange": "52.187.184.26"
+                    }
+                ]
+            },
+            "resources": [
+                {
+                    "condition": "[parameters('sendDiagnosticsToWorkspace')]",
+                    "type": "Microsoft.DocumentDB/databaseAccounts/providers/diagnosticSettings",
+                    "name": "[concat(parameters('name'),'/Microsoft.Insights/SendToLogAnalytics')]",
+                    "dependsOn": [
+                        "[parameters('name')]"
+                    ],
+                    "apiVersion": "2017-05-01-preview",
+                    "properties": {
+                        "name": "SendToLogAnalytics",
+                        "workspaceId": "[parameters('workspaceId')]",
+                        "logs": [
+                            {
+                                "category": "DataPlaneRequests",
+                                "enabled": true
+                            },
+                            {
+                                "category": "MongoRequests",
+                                "enabled": true
+                            },
+                            {
+                                "category": "QueryRuntimeStatistics",
+                                "enabled": true
+                            },
+                            {
+                                "category": "PartitionKeyStatistics",
+                                "enabled": true
+                            },
+                            {
+                                "category": "PartitionKeyRUConsumption",
+                                "enabled": true
+                            },
+                            {
+                                "category": "ControlPlaneRequests",
+                                "enabled": true
+                            },
+                            {
+                                "category": "CassandraRequests",
+                                "enabled": true
+                            },
+                            {
+                                "category": "GremlinRequests",
+                                "enabled": true
+                            }
+                        ],
+                        "metrics": [
+                            {
+                                "category": "Requests",
+                                "enabled": true
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {
+    }
+}

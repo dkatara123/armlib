@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "skuName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "skuCapacity": {
+            "type": "int",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": 1
+        },
+        "zoneRedundant": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": true
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[parameters('name')]",
+            "type": "Microsoft.ServiceBus/namespaces",
+            "apiVersion": "2018-01-01-preview",
+            "location": "[parameters('location')]",
+            "tags": {
+            },
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]",
+                "capacity": "[parameters('skuCapacity')]"
+            },
+            "properties": {
+                "zoneRedundant": "[if(equals(parameters('zoneRedundant'),'Premium'), parameters('zoneRedundant'), json('null'))]"
+            },
+            "resources": [
+            ]
+        }
+    ],
+    "outputs": {
+    }
+}

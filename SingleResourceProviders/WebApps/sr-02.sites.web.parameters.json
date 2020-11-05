@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": ""
+        },
+        "indexNo": {
+            "value": 0
+        },
+        "webAppName": {
+            "value": ""
+        },
+        "serverFarmName": {
+            "value": ""
+        },
+        "serverFarmResourceGroup": {
+            "value": ""
+        },
+        "alwaysOn": {
+            "value": false
+        },
+        "ipSecurityRestrictions": {
+            "value": []
+        },
+        "kind": {
+            "value": ""
+        },
+        "appCommandLine": {
+            "value": ""
+        },
+        "sendDiagnosticsToWorkspace": {
+            "value": false
+        },
+        "workspaceId": {
+            "value": null
+        },
+        "applicationInsightsName": {
+            "value": ""
+        },
+        "applicationInsightsResourceGroup": {
+            "value": ""
+        },
+        "vnetIntegrationVnetResourceGroup": {
+            "value": ""
+        },
+        "vnetIntegrationVnetName": {
+            "value": ""
+        },
+        "vnetIntegrationSubnetName": {
+            "value": ""
+        }
+    }
+}

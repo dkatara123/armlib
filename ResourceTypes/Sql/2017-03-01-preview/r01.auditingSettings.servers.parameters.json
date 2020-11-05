@@ -1,0 +1,16 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+            "value": "idd-dv42-eastus-sqlsvr1"
+        },
+        "auditActionsAndGroups": {
+            "value": [
+                "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+                "FAILED_DATABASE_AUTHENTICATION_GROUP",
+                "BATCH_COMPLETED_GROUP"
+            ]
+        }
+    }
+}

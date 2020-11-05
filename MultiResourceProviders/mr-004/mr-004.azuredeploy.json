@@ -1,0 +1,214 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "dbAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "kind": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "geoReplicationLocations": {
+            "type": "array",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": [
+            ]
+        },
+        "singleGeoReplication": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "serverVersion": {
+            "defaultValue": "3.6",
+            "allowedValues": [
+                "3.2",
+                "3.6"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the MongoDB server version to use."
+            }
+        },
+        "virtualNetworkResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the subnet from which the private IP will be allocated."
+            }
+        },
+        "privateEndpointServices": {
+            "type": "string"
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "virtualNetworkResourceId": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('dbAccountName'))]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "ResponseContent, RequestContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/DocumentDB/2020-04-01/r02.databaseAccounts.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('dbAccountName')]"
+                    },
+                    "kind": {
+                        "value": "[parameters('kind')]"
+                    },
+                    "geoReplicationLocations": {
+                        "value": "[parameters('geoReplicationLocations')]"
+                    },
+                    "singleGeoReplication": {
+                        "value": "[parameters('singleGeoReplication')]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
+                    },
+                    "serverVersion": {
+                        "value": "[parameters('serverVersion')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('dbAccountName'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2020-04-01/r01.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[concat('pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'))]"
+                    },
+                    "virtualNetworkId": {
+                        "value": "[variables('virtualNetworkResourceId')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "privateLinkServiceId": {
+                        "value": "[resourceId('Microsoft.DocumentDB/databaseAccounts',parameters('dbAccountName'))]"
+                    },
+                    "groupIds": {
+                        "value": [
+                            "[parameters('privateEndpointServices')]"
+                        ]
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'),'-dnszones')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "privateEndpointName": {
+                        "value": "[concat('pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'))]"
+                    },
+                    "virtualNetworkResourceGroupName": {
+                        "value": "[parameters('virtualNetworkResourceGroupName')]"
+                    },
+                    "privateDnsZone": {
+                        "value": "[parameters('privateEndpointServices')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

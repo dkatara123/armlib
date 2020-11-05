@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+            "metadata": {
+                "description": "The name of the SQL Server."
+            },
+            "type": "string"
+        },
+        "databaseName": {
+            "metadata": {
+                "description": "The name of the database."
+            },
+            "type": "string"
+        },
+        "ltrBackupPolicyName": {
+            "metadata": {
+                "description": "The name of the backup long term retention policy"
+            },
+            "type": "string",
+            "defaultValue": "Default"
+        },
+        "weeklyRetention": {
+            "metadata": {
+                "description": "The weekly retention policy for an LTR backup in an ISO 8601 format."
+            },
+            "type": "string",
+            "defaultValue": "P1W"
+        },
+        "monthlyRetention": {
+            "metadata": {
+                "description": "The monthly retention policy for an LTR backup in an ISO 8601 format."
+            },
+            "type": "string",
+            "defaultValue": "P12W"
+        },
+        "yearlyRetention": {
+            "metadata": {
+                "description": "The yearly retention policy for an LTR backup in an ISO 8601 format."
+            },
+            "type": "string",
+            "defaultValue": "P7Y"
+        },
+        "weekOfYear": {
+            "metadata": {
+                "description": "The week of year to take the yearly backup in an ISO 8601 format."
+            },
+            "type": "int",
+            "defaultValue": 52
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('sqlServerName'),'/',parameters('databaseName'),'/',parameters('ltrBackupPolicyName'))]",
+            "type": "Microsoft.Sql/servers/databases/backupLongTermRetentionPolicies",
+            "apiVersion": "2017-03-01-preview",
+            "properties": {
+                "weeklyRetention": "[parameters('weeklyRetention')]",
+                "monthlyRetention": "[parameters('monthlyRetention')]",
+                "yearlyRetention": "[parameters('yearlyRetention')]",
+                "weekOfYear": "[parameters('weekOfYear')]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

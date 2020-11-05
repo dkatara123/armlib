@@ -1,0 +1,187 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "String",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "name": {
+            "type": "String"
+        },
+        "sku_Tier": {
+            "type": "String"
+        },
+        "sku_Name": {
+            "type": "String"
+        },
+        "sku_Capacity": {
+            "type": "Int"
+        },
+        "https-listener-cert_data": {
+            "type": "SecureString"
+        },
+        "https-listener-cert_password": {
+            "type": "SecureString"
+        },
+        "vnetResourceGroupName": {
+            "type": "string"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "backendPoolFQDN": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "vnetId": "[resourceId(parameters('vnetResourceGroupName'),'Microsoft.Network/virtualNetworks',parameters('vnetName'))]",
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
+        "applicationGatewayId": "[resourceId('Microsoft.Network/applicationGateways', parameters('name'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/applicationGateways",
+            "apiVersion": "2019-09-01",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "tags": {
+            },
+            "properties": {
+                "sku": {
+                    "name": "[parameters('sku_Name')]",
+                    "tier": "[parameters('sku_Tier')]",
+                    "capacity": "[parameters('sku_Capacity')]"
+                },
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "ipConfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "privateFrontendIp1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendPorts": [
+                    {
+                        "name": "port_443",
+                        "properties": {
+                            "Port": 443
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "backendPool1",
+                        "properties": {
+                            "backendAddresses": [
+                                {
+                                    "fqdn": "[parameters('backendPoolFQDN')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "backendHttpSettings1",
+                        "properties": {
+                            "Port": 443,
+                            "Protocol": "Https",
+                            "cookieBasedAffinity": "Enabled",
+                            "requestTimeout": 20,
+                            "affinityCookieName": "affinityCookie",
+                            "pickHostNameFromBackendAddress": true,
+                            "probe": {
+                                "id": "[concat(variables('applicationGatewayId'), '/probes/probe1_backendHttpSettings1_Https')]"
+                            }
+                        }
+                    }
+                ],
+                "httpListeners": [
+                    {
+                        "name": "listener1_Https",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/privateFrontendIp1')]"
+                            },
+                            "frontendPort": {
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendPorts/port_443')]"
+                            },
+                            "protocol": "Https",
+                            "sslCertificate": {
+                                "id": "[concat(variables('applicationGatewayId'), '/sslCertificates/https-listener-cert')]"
+                            }
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "Name": "routingRule1_Basic",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayId'), '/httpListeners/listener1_Https')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayId'), '/backendAddressPools/backendPool1')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayId'), '/backendHttpSettingsCollection/backendHttpSettings1')]"
+                            }
+                        }
+                    }
+                ],
+                "enableHttp2": true,
+                "sslCertificates": [
+                    {
+                        "name": "https-listener-cert",
+                        "properties": {
+                            "data": "[parameters('https-listener-cert_data')]",
+                            "password": "[parameters('https-listener-cert_password')]"
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "probe1_backendHttpSettings1_Https",
+                        "properties": {
+                            "backendHttpSettings": [
+                                {
+                                    "id": "[concat(variables('applicationGatewayId'), '/backendHttpSettingsCollection/backendHttpSettings1')]"
+                                }
+                            ],
+                            "interval": 30,
+                            "minServers": 0,
+                            "path": "/",
+                            "protocol": "Https",
+                            "timeout": 30,
+                            "unhealthyThreshold": 3,
+                            "pickHostNameFromBackendHttpSettings": true
+                        }
+                    }
+                ],
+                "webApplicationFirewallConfiguration": {
+                    "enabled": true,
+                    "firewallMode": "Prevention",
+                    "ruleSetType": "OWASP",
+                    "ruleSetVersion": "3.0"
+                }
+            }
+        }
+    ]
+}

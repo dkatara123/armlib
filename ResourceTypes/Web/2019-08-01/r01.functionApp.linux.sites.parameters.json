@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "shabtestfunctionapp"
+        },
+        "hostingPlanName": {
+            "value": "asp-use-idd-fnapp1-dv40"
+        },
+        "serverFarmResourceGroup": {
+            "value": "rgp-idd-fnapp1-dv40"
+        },
+        "storageAccountResourceGroup": {
+            "value": "rgp-idd-fnapp1-dv40"
+        },
+        "storageAccountName": {
+            "value": "stouseiddfnapp1dv40"
+        },
+        "linuxFxVersion": {
+            "value": "dotnet|3.1"
+        },
+        "ipSecurityRestrictions": {
+            "value": [
+                {
+                    "vnetResourceGroupName": "co-np-eastus-iddvnet-rg",
+                    "vnetName": "CO-NP-eastus-IDD-vnet",
+                    "subnetName": "co-np-eastus-IDD-AppGW-subnet",
+                    "action": "Allow",
+                    "tag": "Default",
+                    "priority": 1001,
+                    "name": "idd-d1-tomgw1-access-allow",
+                    "description": "idd-d1-tomgw1-access-allow"
+                }
+            ]
+        }
+    }
+}

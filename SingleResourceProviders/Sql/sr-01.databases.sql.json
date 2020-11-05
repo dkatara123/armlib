@@ -1,0 +1,159 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "sqlServerName": {
+            "type": "string"
+        },
+        "databaseName": {
+            "type": "string"
+        },
+        "skuName": {
+            "type": "string"
+        },
+        "skuTier": {
+            "type": "string"
+        },
+        "maxSizeBytes": {
+            "type": "int"
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "tags": {
+            },
+            "name": "[concat(parameters('uniqueString'),'.',parameters('databaseName'),'.',parameters('sqlServerName'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-10-01-preview/r02.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "databaseName": {
+                        "value": "[parameters('databaseName')]"
+                    },
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "skuName": {
+                        "value": "[parameters('skuName')]"
+                    },
+                    "skuTier": {
+                        "value": "[parameters('skuTier')]"
+                    },
+                    "maxSizeBytes": {
+                        "value": "[parameters('maxSizeBytes')]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'.',parameters('databaseName'),'.',parameters('sqlServerName'))]"
+            ],
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "tags": {
+            },
+            "name": "[concat(parameters('uniqueString'),'.ltr.',parameters('databaseName'),'.',parameters('sqlServerName'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-03-01-preview/r01.ltrPolicies.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "databaseName": {
+                        "value": "[parameters('databaseName')]"
+                    },
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'.ltr.',parameters('databaseName'),'.',parameters('sqlServerName'))]"
+            ],
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "tags": {
+            },
+            "name": "[concat(parameters('uniqueString'),'.str.',parameters('databaseName'),'.',parameters('sqlServerName'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-10-01-preview/r01.strPolicies.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "databaseName": {
+                        "value": "[parameters('databaseName')]"
+                    },
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

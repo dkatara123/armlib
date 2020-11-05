@@ -1,0 +1,34 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "indexNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": "?sv=2019-02-02&sr=c&sig=ikzult8mfw3TQZNJWlgWs4Bf60Zi5wK3AM6pBZ3M%2BOk%3D&st=2020-05-28T15%3A50%3A11Z&se=2020-05-28T16%3A50%3A11Z&sp=r"
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "https://conpeusiddartifacts01sa.blob.core.windows.net/published-artifacts"
+        },
+        "storageAccountName": {
+            "value": "stouseiddblob1dv40"
+        },
+        "containers": {
+            "value": [
+                {
+                    "name": "container1",
+                    "publicAccess": "None"
+                },
+                {
+                    "name": "container2",
+                    "publicAccess": "Container"
+                },
+                {
+                    "name": "container3",
+                    "publicAccess": "Blob"
+                }
+            ]
+        }
+    }
+}

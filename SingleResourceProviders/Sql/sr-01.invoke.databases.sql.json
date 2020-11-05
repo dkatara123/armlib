@@ -1,0 +1,109 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "sqlServerName": {
+            "type": "string"
+        },
+        "databases": {
+            "type": "array"
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "condition": "[parameters('databases')[copyIndex()].deploy]",
+            "copy": {
+                "count": "[length(parameters('databases'))]",
+                "name": "copy-sr-01.databases.sql.json",
+                "mode": "Parallel"
+            },
+            "name": "[concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex())]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/SingleResourceProviders/Sql/sr-01.databases.sql.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "uniqueString": {
+                        "value": "[parameters('uniqueString')]"
+                    },
+                    "indexNo": {
+                        "value": "[copyIndex()]"
+                    },
+                    "_artifactsStorageSASToken": {
+                        "value": "[parameters('_artifactsStorageSASToken')]"
+                    },
+                    "_artifactsStorageContainerUrl": {
+                        "value": "[parameters('_artifactsStorageContainerUrl')]"
+                    },
+                    "databaseName": {
+                        "value": "[parameters('databases')[copyIndex()].name]"
+                    },
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "skuName": {
+                        "value": "[parameters('databases')[copyIndex()].sku.name]"
+                    },
+                    "skuTier": {
+                        "value": "[parameters('databases')[copyIndex()].sku.tier]"
+                    },
+                    "maxSizeBytes": {
+                        "value": "[parameters('databases')[copyIndex()].maxSizeBytes]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

@@ -1,0 +1,280 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "iterationNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "sqlServerName": {
+            "type": "string"
+        },
+        "aadGroupName": {
+            "type": "string"
+        },
+        "aadGroupObjectId": {
+            "type": "string"
+        },
+        "administratorLogin": {
+            "type": "string"
+        },
+        "administratorLoginPassword": {
+            "type": "securestring"
+        },
+        "workspaceName": {
+            "type": "string"
+        },
+        "workspaceResourceGroup": {
+            "type": "string"
+        },
+        "virtualNetworkRules": {
+            "type": "array"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "diagnosticSettingsName": "SQLSecurityAuditEvents_3d229c42-c7e7-4c97-9a99-ec0d0d8b86c1",
+        "workspaceId": "[resourceId(parameters('workspaceResourceGroup'),'Microsoft.OperationalInsights/workspaces',parameters('workspaceName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2019-06-01-preview/r01.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "administratorLogin": {
+                        "value": "[parameters('administratorLogin')]"
+                    },
+                    "administratorLoginPassword": {
+                        "value": "[parameters('administratorLoginPassword')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'))]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-master')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2019-06-01-preview/r01.master.databases.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-master')]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-diagnosticSettings')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-05-01-preview/r01.diagnosticSettings.databases.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "resourceName": {
+                        "value": "[concat(parameters('sqlServerName'),'/master')]"
+                    },
+                    "diagnosticSettingsName": {
+                        "value": "[variables('diagnosticSettingsName')]"
+                    },
+                    "workspaceId": {
+                        "value": "[variables('workspaceId')]"
+                    },
+                    "logs": {
+                        "value": [
+                            {
+                                "category": "SQLSecurityAuditEvents",
+                                "enabled": true,
+                                "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": true
+                                }
+                            }
+                        ]
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-diagnosticSettings')]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-auditingSettings')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-03-01-preview/r01.auditingSettings.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "auditActionsAndGroups": {
+                        "value": [
+                            "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+                            "FAILED_DATABASE_AUTHENTICATION_GROUP",
+                            "BATCH_COMPLETED_GROUP"
+                        ]
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'))]"
+            ],
+            "copy": {
+                "name": "copy-virtualNetworkRules",
+                "count": "[length(parameters('virtualNetworkRules'))]"
+            },
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-vnetRules-',copyIndex())]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2015-05-01-preview/r01.virtualNetworkRules.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('virtualNetworkRules')[copyIndex()].name]"
+                    },
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "virtualNetworkSubnetId": {
+                        "value": "[resourceId(parameters('virtualNetworkRules')[copyIndex()].vnetResourceGroupName,'Microsoft.Network/virtualNetworks/subnets',parameters('virtualNetworkRules')[copyIndex()].vnetName, parameters('virtualNetworkRules')[copyIndex()].subnetName)]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'))]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-administrators')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2019-06-01-preview/r01.administrators.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "aadGroupName": {
+                        "value": "[parameters('aadGroupName')]"
+                    },
+                    "aadGroupObjectId": {
+                        "value": "[parameters('aadGroupObjectId')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        },
+        {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-diagnosticSettings')]"
+            ],
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-securityPolicies')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-03-01-preview/r01.securityPolicies.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        }
+    ],
+    "outputs": {
+        "principalId": {
+            "type": "string",
+            "value": "[reference(concat(parameters('uniqueString'),'-',parameters('sqlServerName'))).outputs.principalId.value]"
+        }
+    }
+}

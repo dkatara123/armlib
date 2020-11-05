@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "metadata": {
+                "description": "The name of the server."
+            },
+            "type": "string"
+        },
+        "location": {
+            "metadata": {
+                "description": "Resource location."
+            },
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "administratorLogin": {
+            "metadata": {
+                "description": "Administrator username for the server. Once created it cannot be changed."
+            },
+            "type": "string"
+        },
+        "administratorLoginPassword": {
+            "metadata": {
+                "description": "The administrator login password (required for server creation)."
+            },
+            "type": "securestring"
+        },
+        "publicNetworkAccess": {
+            "metadata": {
+                "description": "Whether or not public endpoint access is allowed for this server. Value is optional but if passed in, must be 'Enabled' or 'Disabled'. - Enabled or Disabled"
+            },
+            "type": "string",
+            "defaultValue": "Enabled",
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ]
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[parameters('name')]",
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2019-06-01-preview",
+            "location": "[parameters('location')]",
+            "tags": {
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                "version": "12.0",
+                "minimalTlsVersion": "1.2",
+                "publicNetworkAccess": "[parameters('publicNetworkAccess')]"
+            }
+        }
+    ],
+    "outputs": {
+        "tenantId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Sql/servers/', parameters('name')),'2019-06-01-preview','Full').identity.tenantId]"
+        },
+        "principalId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Sql/servers/', parameters('name')),'2019-06-01-preview','Full').identity.principalId]"
+        }
+    }
+}

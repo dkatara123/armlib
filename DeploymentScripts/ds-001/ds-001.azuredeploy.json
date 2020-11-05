@@ -1,0 +1,87 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "identity": {
+            "type": "string"
+        },
+        "forceUpdateTag": {
+            "type": "string",
+            "defaultValue": "v1.0"
+        },
+        "webAppResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "webAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "customId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "shareName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "storageAccountResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "mountPath": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "[concat('mount-',parameters('shareName'),'-to-',parameters('webAppName'))]",
+            "location": "[resourceGroup().location]",
+            "kind": "AzureCLI",
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[parameters('identity')]": {
+                    }
+                }
+            },
+            "properties": {
+                "forceUpdateTag": "[parameters('forceUpdateTag')]",
+                "azCliVersion": "2.0.80",
+                "timeout": "PT30M",
+                "scriptContent": "[concat('az webapp config storage-account add --resource-group ',parameters('webAppResourceGroup'),' --name ',parameters('webAppName'),' --custom-id ',parameters('customId'),' --storage-type AzureFiles --share-name ',parameters('shareName'),' --account-name ',parameters('storageAccountName'),' --access-key ',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/StorageAccounts',parameters('storageAccountName')),'2019-06-01').keys[0].value,' --mount-path ',parameters('mountPath'))]",
+                "supportingScriptUris": [
+                ],
+                "cleanupPreference": "Always",
+                "retentionInterval": "P1D"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateDnsZoneName": {
+            "value": "dv40.privatelink.azure.com"
+        },
+        "A_recordName": {
+            "value": "stouseiddblob1dv40-file"
+        },
+        "ipv4Address": {
+            "value": "10.16.16.4"
+        }
+    }
+}

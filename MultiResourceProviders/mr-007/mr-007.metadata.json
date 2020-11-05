@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-007",
+  "displayName": "Windows WebApp with VNet Integration and Private Endpoints.",
+  "description": ""
+}

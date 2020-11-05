@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+            "type": "string"
+        },
+        "keyVaultName": {
+            "type": "string"
+        },
+        "keyName": {
+            "type": "string"
+        },
+        "keyVersion": {
+            "type": "string"
+        },
+        "serverKeyType": {
+            "metadata": {
+                "description": "The server key type like 'ServiceManaged', 'AzureKeyVault'. - ServiceManaged or AzureKeyVault"
+            },
+            "type": "string"
+        },
+        "keyVaultUri": {
+            "metadata": {
+                "description": "The URI of the server key."
+            },
+            "type": "string"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "serverKeyName": "[concat(parameters('keyVaultName'),'_',parameters('keyName'),'_',parameters('keyVersion'))]",
+        "keyUri": "[concat(parameters('keyVaultUri'),'keys/',parameters('keyName'),'/', parameters('keyVersion'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('sqlServerName'),'/',variables('serverKeyName'))]",
+            "type": "Microsoft.Sql/servers/keys",
+            "apiVersion": "2015-05-01-preview",
+            "properties": {
+                "serverKeyType": "[parameters('serverKeyType')]",
+                "uri": "[variables('keyUri')]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

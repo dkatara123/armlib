@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+            "value": "idd-dv42-eastus-sqlsvr1"
+        },
+        "aadGroupName": {
+            "value": "IDD-DatabaseAdmins"
+        },
+        "aadGroupObjectId": {
+            "value": "03fda586-5db5-46e4-af68-4aa4a8c5d8a9"
+        }
+    }
+}

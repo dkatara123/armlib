@@ -1,0 +1,6 @@
+{
+  "type": "SinlgeResourceProviders",
+  "Id": "sr-01",
+  "displayName": "General storage v2 account with multi containers & fileShares.",
+  "description": ""
+}

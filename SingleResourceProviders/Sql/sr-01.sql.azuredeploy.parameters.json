@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "iterationNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "https://conpeusiddartifacts01sa.blob.core.windows.net/published-artifacts"
+        },
+        "sqlServerName": {
+            "value": "idd-dv42-eastus-sqlsvr1"
+        },
+        "aadGroupName": {
+            "value": "IDD-DatabaseAdmins"
+        },
+        "aadGroupObjectId": {
+            "value": "03fda586-5db5-46e4-af68-4aa4a8c5d8a9"
+        },
+        "administratorLogin": {
+            "value": "sqlLocalAdmin"
+        },
+        "administratorLoginPassword": {
+            "value": "KPMGkpmg@1234"
+        },
+        "workspaceName": {
+            "value": "co-np-eastus-idd1-workspace"
+        },
+        "workspaceResourceGroup": {
+            "value": "co-np-eastus-iddloganalytics-rg"
+        },
+        "virtualNetworkRules": {
+            "value": [
+                {
+                    "name": "allow-qaappService",
+                    "vnetResourceGroupName": "co-np-eastus-iddvnet-rg",
+                    "vnetName": "CO-NP-eastus-IDD-vnet",
+                    "subnetName": "co-np-eastus-IDD-QAAppService-subnet"
+                },
+                {
+                    "name": "allow-qawebgw",
+                    "vnetResourceGroupName": "co-np-eastus-iddvnet-rg",
+                    "vnetName": "CO-NP-eastus-IDD-vnet",
+                    "subnetName": "co-np-eastus-IDD-QAWebGW-subnet"
+                }
+            ]
+        }
+    }
+}

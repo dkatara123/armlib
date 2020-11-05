@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "_artifactsStorageSASToken": {
+            "metadata": {},
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "https://conpeusiddartifacts01sa.blob.core.windows.net/published-artifacts"
+        },
+        "namespaceName": {
+            "value": ""
+        },
+        "namespaceSkuName": {
+            "value": "Premium"
+        },
+        "namespaceSkuTier": {
+            "value": "Premium"
+        },
+        "namespaceSkuCapacity": {
+            "value": 1
+        },
+        "topics": {
+            "value": [
+                {
+                    "name": "topics-1",
+                    "enablePartitioning": false
+                }
+            ]
+        },
+        "queues": {
+            "value": [
+                {
+                    "name": "queues-1",
+                    "enablePartitioning": false
+                }
+            ]
+        }
+    }
+}

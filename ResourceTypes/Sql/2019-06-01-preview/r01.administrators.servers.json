@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+            "type": "string"
+        },
+        "aadGroupName": {
+            "type": "string"
+        },
+        "aadGroupObjectId": {
+            "type": "string"
+        },
+        "tenantId": {
+            "type": "string",
+            "defaultValue": "[subscription().tenantId]"
+        },
+        "aadOnlyAuthentication": {
+            "type": "bool",
+            "defaultValue": true
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('sqlServerName'),'/ActiveDirectory')]",
+            "type": "Microsoft.Sql/servers/administrators",
+            "apiVersion": "2019-06-01-preview",
+            "properties": {
+                "administratorType": "ActiveDirectory",
+                "login": "[parameters('aadGroupName')]",
+                "sid": "[parameters('aadGroupObjectId')]",
+                "tenantId": "[parameters('tenantId')]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

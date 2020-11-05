@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "identity": {
+            "value": "/subscriptions/44328f0f-3fad-40a5-ae95-390f5b1a0d8c/resourceGroups/rgp-idd-armdeployment-dev/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uami-use-idd-deploymentscripts"
+        },
+        "webAppName": {
+            "value": "app-use-idd-aratas1-dv42"
+        },
+        "customId": {
+            "value": "kyc"
+        },
+        "shareName": {
+            "value": "kyc"
+        },
+        "storageAccountName": {
+            "value": "stouseiddblob1dv42"
+        },
+        "mountPath": {
+            "value": "/kyc"
+        },
+        "webAppResourceGroup": {
+            "value": "rgp-idd-webapp-dv42"
+        },
+        "storageAccountResourceGroup": {
+            "value": ""
+        }
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the identity resource. Any name value is acceptable."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "The geo-location where the resource lives."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('name')]",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2018-11-30",
+            "tags": {},
+            "location": "[parameters('location')]"
+        }
+    ],
+    "outputs": {
+        "principalId": {
+            "type": "string",
+            "value": "[reference(parameters('name')).principalId]"
+        }
+    }
+}

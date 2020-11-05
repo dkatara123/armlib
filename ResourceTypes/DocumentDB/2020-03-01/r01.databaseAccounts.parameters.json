@@ -1,0 +1,34 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "shabcosmosdb"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "kind": {
+            "value": "MongoDB"
+        },
+        "geoReplicationLocations": {
+            "value": [
+                {
+                    "locationName": "eastus",
+                    "failoverPriority": 0
+                },
+                {
+                    "locationName": "centralus",
+                    "failoverPriority": 1
+                },
+                {
+                    "locationName": "westus",
+                    "failoverPriority": 2
+                }
+            ]
+        },
+        "singleGeoReplication": {
+            "value": false
+        }
+    }
+}

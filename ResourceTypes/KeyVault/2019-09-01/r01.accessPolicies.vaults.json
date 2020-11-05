@@ -1,0 +1,89 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "type": "string"
+        },
+        "location": {
+            "metadata": {
+                "descrption": "Location of the resource."
+            },
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "tenantId": {
+            "metadata": {
+                "description": "The Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. - globally unique identifier"
+            },
+            "type": "string",
+            "defaultValue": "[subscription().tenantId]"
+        },
+        "objectId": {
+            "metadata": {
+                "description": "The object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies."
+            },
+            "type": "string"
+        },
+        "keys": {
+            "metadata": {
+                "description": "Parameter type is an Array. Permissions to keys - encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, purge"
+            },
+            "type": "array",
+            "defaultValue": [
+            ]
+        },
+        "secrets": {
+            "metadata": {
+                "description": "Parameter type is an Array. Permissions to secrets - get, list, set, delete, backup, restore, recover, purge"
+            },
+            "type": "array",
+            "defaultValue": [
+            ]
+        },
+        "certificates": {
+            "metadata": {
+                "description": "Parameter type is an Array. Permissions to certificates - get, list, delete, create, import, update, managecontacts, getissuers, listissuers, setissuers, deleteissuers, manageissuers, recover, purge, backup, restore"
+            },
+            "type": "array",
+            "defaultValue": [
+            ]
+        },
+        "storage": {
+            "metadata": {
+                "description": "Parameter type is an Array. Permissions to storage accounts - get, list, delete, set, update, regeneratekey, recover, purge, backup, restore, setsas, listsas, getsas, deletesas"
+            },
+            "type": "array",
+            "defaultValue": [
+            ]
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('keyVaultName'),'/add')]",
+            "type": "Microsoft.KeyVault/vaults/accessPolicies",
+            "apiVersion": "2019-09-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "accessPolicies": [
+                    {
+                        "tenantId": "[parameters('tenantId')]",
+                        "objectId": "[parameters('objectId')]",
+                        "permissions": {
+                            "keys": "[parameters('keys')]",
+                            "secrets": "[parameters('secrets')]",
+                            "certificates": "[parameters('certificates')]",
+                            "storage": "[parameters('storage')]"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

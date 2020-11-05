@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-006",
+  "displayName": "User Assigned Identities with Role Assignments.",
+  "description": ""
+}

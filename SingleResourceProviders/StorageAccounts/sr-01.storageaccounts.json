@@ -1,0 +1,137 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "storageAccountName": {
+            "type": "string"
+        },
+        "containers": {
+            "type": "array"
+        },
+        "fileShares": {
+            "type": "array"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-r01.storageV2.storageAccounts-',parameters('indexNo'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Storage/2019-06-01/r01.storageV2.storageAccounts.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('storageAccountName')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-r01.storageV2.storageAccounts-',parameters('indexNo'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-r01.containers.blobServices.storageAccounts-',parameters('indexNo'),'-',copyIndex())]",
+            "copy": {
+                "mode": "Parallel",
+                "count": "[length(parameters('containers'))]",
+                "name": "copy-storageV2-containers"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Storage/2019-06-01/r01.containers.blobServices.storageAccounts.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "storageAccountName": {
+                        "value": "[parameters('storageAccountName')]"
+                    },
+                    "name": {
+                        "value": "[parameters('containers')[copyIndex()].name]"
+                    },
+                    "publicAccess": {
+                        "value": "[parameters('containers')[copyIndex()].publicAccess]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-r01.storageV2.storageAccounts-',parameters('indexNo'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-r01.shares.fileServices.storageAccounts-',parameters('indexNo'),'-',copyIndex())]",
+            "copy": {
+                "mode": "Parallel",
+                "count": "[length(parameters('fileShares'))]",
+                "name": "copy-storageV2-fileShares"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Storage/2019-06-01/r01.shares.fileServices.storageAccounts.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "storageAccountName": {
+                        "value": "[parameters('storageAccountName')]"
+                    },
+                    "shareName": {
+                        "value": "[parameters('fileShares')[copyIndex()].name]"
+                    },
+                    "shareQuota": {
+                        "value": "[parameters('fileShares')[copyIndex()].quota]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

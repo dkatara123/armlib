@@ -1,0 +1,111 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "privateDnsZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "virtualNetworkLinkName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "condition": true,
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('privateDnsZoneName'),'-',parameters('indexNo'))]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2018-09-01/r01.privateDnsZones.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('privateDnsZoneName')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": false,
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('privateDnsZoneName'),'-',parameters('indexNo'))]"
+            ],
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('privateDnsZoneName'),'-',parameters('virtualNetworkLinkName'),'-',parameters('indexNo'))]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2018-09-01/r01.virtualNetworkLinks.privateDnsZones.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "privateDnsZoneName": {
+                        "value": "[parameters('privateDnsZoneName')]"
+                    },
+                    "virtualNetworkLinkName": {
+                        "value": "[parameters('virtualNetworkLinkName')]"
+                    },
+                    "virtualNetworkResourceGroup": {
+                        "value": "[parameters('virtualNetworkResourceGroup')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

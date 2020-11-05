@@ -1,0 +1,225 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "hostingPlanName": {
+            "type": "string"
+        },
+        "serverFarmResourceGroup": {
+            "type": "string"
+        },
+        "storageAccountResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "storageAccountName": {
+            "type": "string"
+        },
+        "linuxFxVersion": {
+            "type": "string"
+        },
+        "functions_worker_runtime": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "allowedValues": [
+                "dotnet",
+                "node",
+                "java",
+                "powershell",
+                "python"
+            ]
+        },
+        "runtimeVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "allowedValues": [
+                "~1",
+                "~2",
+                "~3"
+            ]
+        },
+        "ipSecurityRestrictions": {
+            "type": "array"
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        },
+        "applicationInsightsName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "applicationInsightsResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "functionsRuntimeScaleMonitoringEnabled": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-08-01",
+            "name": "[parameters('name')]",
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp,linux",
+            "location": "[parameters('location')]",
+            "tags": {
+            },
+            "dependsOn": [
+            ],
+            "properties": {
+                "name": "[parameters('name')]",
+                "siteConfig": {
+                    "functionsRuntimeScaleMonitoringEnabled": "[parameters('functionsRuntimeScaleMonitoringEnabled')]",
+                    "preWarmedInstanceCount": 1,
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "[parameters('runtimeVersion')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "[parameters('functions_worker_runtime')]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(parameters('name')),take(uniqueString(parameters('name')),5))]"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId(parameters('applicationInsightsResourceGroup'),'Microsoft.Insights/components',parameters('applicationInsightsName')), '2018-05-01-preview').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[concat('InstrumentationKey=',reference(resourceId(parameters('applicationInsightsResourceGroup'),'Microsoft.Insights/components',parameters('applicationInsightsName')), '2018-05-01-preview').InstrumentationKey,';IngestionEndpoint=https://eastus-1.in.applicationinsights.azure.com/')]"
+                        },
+                        {
+                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_Mode",
+                            "value": "recommended"
+                        },
+                        {
+                            "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+                            "value": "1.0.0"
+                        },
+                        {
+                            "name": "DiagnosticServices_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+                            "value": "1.0.0"
+                        },
+                        {
+                            "name": "SnapshotDebugger_EXTENSION_VERSION",
+                            "value": "disabled"
+                        },
+                        {
+                            "name": "InstrumentationEngine_EXTENSION_VERSION",
+                            "value": "disabled"
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+                            "value": "disabled"
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_PreemptSdk",
+                            "value": "disabled"
+                        }
+                    ],
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "http20Enabled": false,
+                    "minTlsVersion": "1.2",
+                    "copy": [
+                        {
+                            "name": "ipSecurityRestrictions",
+                            "count": "[length(parameters('ipSecurityRestrictions'))]",
+                            "input": {
+                                "vnetSubnetResourceId": "[resourceId(parameters('ipSecurityRestrictions')[copyIndex('ipSecurityRestrictions')].vnetResourceGroupName,'Microsoft.Network/virtualNetworks/subnets',parameters('ipSecurityRestrictions')[copyIndex('ipSecurityRestrictions')].vnetName,parameters('ipSecurityRestrictions')[copyIndex('ipSecurityRestrictions')].subnetName)]",
+                                "action": "[parameters('ipSecurityRestrictions')[copyIndex('ipSecurityRestrictions')].action]",
+                                "tag": "[parameters('ipSecurityRestrictions')[copyIndex('ipSecurityRestrictions')].tag]",
+                                "priority": "[parameters('ipSecurityRestrictions')[copyIndex('ipSecurityRestrictions')].priority]",
+                                "name": "[parameters('ipSecurityRestrictions')[copyIndex('ipSecurityRestrictions')].name]",
+                                "description": "[parameters('ipSecurityRestrictions')[copyIndex('ipSecurityRestrictions')].description]"
+                            }
+                        }
+                    ],
+                    "scmIpSecurityRestrictionsUseMain": true,
+                    "ftpsState": "Disabled"
+                },
+                "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'),'Microsoft.Web/serverfarms',parameters('hostingPlanName'))]",
+                "clientAffinityEnabled": false,
+                "httpsOnly": true
+            },
+            "resources": [
+                {
+                    "condition": "[parameters('sendDiagnosticsToWorkspace')]",
+                    "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+                    "name": "[concat(parameters('name'),'/Microsoft.Insights/SendToLogAnalytics')]",
+                    "dependsOn": [
+                        "[parameters('name')]"
+                    ],
+                    "apiVersion": "2017-05-01-preview",
+                    "properties": {
+                        "name": "SendToLogAnalytics",
+                        "workspaceId": "[parameters('workspaceId')]",
+                        "logs": [
+                            {
+                                "category": "FunctionAppLogs",
+                                "enabled": true
+                            }
+                        ],
+                        "metrics": [
+                            {
+                                "category": "AllMetrics",
+                                "enabled": true
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

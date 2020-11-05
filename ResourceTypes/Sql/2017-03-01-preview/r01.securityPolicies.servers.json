@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+            "type": "string"
+        },
+        "state": {
+            "metadata": {
+                "description": "Specifies the state of the policy, whether it is enabled or disabled or a policy has not been applied yet on the specific database. - New, Enabled, Disabled"
+            },
+            "type": "string",
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "defaultValue": "Enabled"
+        },
+        "disabledAlerts": {
+            "metadata": {
+                "description": "Specifies an array of alerts that are disabled. Allowed values are: Sql_Injection, Sql_Injection_Vulnerability, Access_Anomaly, Data_Exfiltration, Unsafe_Action."
+            },
+            "type": "array",
+            "allowedValues": [
+                "Sql_Injection",
+                "Sql_Injection_Vulnerability",
+                "Access_Anomaly",
+                "Data_Exfiltration",
+                "Unsafe_Action"
+            ],
+            "defaultValue": [
+            ]
+        },
+        "emailAddresses": {
+            "metadata": {
+                "description": "Specifies an array of e-mail addresses to which the alert is sent."
+            },
+            "type": "array",
+            "defaultValue": [
+            ]
+        },
+        "enableAccountAdmins": {
+            "metadata": {
+                "description": "Specifies that the alert is sent to the account administrators."
+            },
+            "type": "bool",
+            "defaultValue": false
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('sqlServerName'),'/Default')]",
+            "type": "Microsoft.Sql/servers/securityAlertPolicies",
+            "apiVersion": "2017-03-01-preview",
+            "properties": {
+                "state": "[parameters('state')]",
+                "disabledAlerts": "[parameters('disabledAlerts')]",
+                "emailAddresses": "[parameters('emailAddresses')]",
+                "emailAccountAdmins": "[parameters('enableAccountAdmins')]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

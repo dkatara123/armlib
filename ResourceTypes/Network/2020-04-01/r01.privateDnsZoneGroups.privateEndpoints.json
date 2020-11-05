@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateEndpointName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the private endpoint."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "virtualNetworkResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "privateDnsZone": {
+            "type": "string",
+            "allowedValues": [
+                "blob",
+                "file",
+                "queue",
+                "table",
+                "sites",
+                "database",
+                "MongoDB",
+                "sqlServer",
+                "namespace",
+                "vault"
+            ]
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "blob": "privatelink.blob.core.windows.net",
+        "file": "privatelink.file.core.windows.net",
+        "sites": "privatelink.azurewebsites.net",
+        "sqlServer": "privatelink.database.windows.net",
+        "MongoDB": "privatelink.mongo.cosmos.azure.com",
+        "namespace": "privatelink.servicebus.windows.net",
+        "vault": "privatelink.vaultcore.azure.net"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('privateEndpointName'),'/default')]",
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "apiVersion": "2020-04-01",
+            "comments": "",
+            "location": "[parameters('location')]",
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "[replace(variables(parameters('privateDnsZone')),'.','-')]",
+                        "properties": {
+                            "privateDnsZoneId": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/privateDnsZones',variables(parameters('privateDnsZone')))]"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
