@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "indexNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "keyVaultName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "networkAcls": {
+            "value": {
+                "defaultAction": "deny",
+                "bypass": "AzureServices",
+                "ipRules": [],
+                "virtualNetworkRules": [
+                    {
+                        "id": "/subscriptions/44328f0f-3fad-40a5-ae95-390f5b1a0d8c/resourceGroups/co-np-eastus-iddvnet-rg/providers/Microsoft.Network/virtualNetworks/CO-NP-eastus-IDD-vnet/subnets/co-np-eastus-IDD-DevAppService-subnet",
+                        "ignoreMissingVnetServiceEndpoint": false
+                    },
+                    {
+                        "id": "/subscriptions/44328f0f-3fad-40a5-ae95-390f5b1a0d8c/resourceGroups/co-np-eastus-iddvnet-rg/providers/Microsoft.Network/virtualNetworks/CO-NP-eastus-IDD-vnet/subnets/co-np-eastus-IDD-DevAppSrv2-subnet",
+                        "ignoreMissingVnetServiceEndpoint": false
+                    }
+                ]
+            }
+        },
+        "privateEndpointVnetResourceGroup": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "privateEndpointVnetName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "privateEndpointSubnetName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "privateEndpointServices": {
+            "value": "" // TODO: Fill in parameter value
+        }
+    }
+}

@@ -1,6 +1,6 @@
 {
   "type": "MultiResourceProviders",
-  "Id": "mr-007",
-  "displayName": "Windows WebApp with VNet Integration and Private Endpoints.",
+  "Id": "mr-009",
+  "displayName": "Keyvault with Private Endpoint and DNS Zones.",
   "description": ""
 }
