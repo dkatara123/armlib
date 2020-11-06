@@ -62,7 +62,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2018-09-01/r01.privateDnsZones.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2018-09-01/r01.privateDnsZones.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "name": {
@@ -87,7 +87,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2018-09-01/r01.virtualNetworkLinks.privateDnsZones.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2018-09-01/r01.virtualNetworkLinks.privateDnsZones.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "privateDnsZoneName": {

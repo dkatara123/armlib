@@ -65,7 +65,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-10-01-preview/r02.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2017-10-01-preview/r02.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "databaseName": {
@@ -109,7 +109,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-03-01-preview/r01.ltrPolicies.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2017-03-01-preview/r01.ltrPolicies.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "databaseName": {
@@ -138,7 +138,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-10-01-preview/r01.strPolicies.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2017-10-01-preview/r01.strPolicies.databases.servers.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "databaseName": {

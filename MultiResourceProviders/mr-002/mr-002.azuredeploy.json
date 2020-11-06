@@ -95,7 +95,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/SingleResourceProviders/Sql/sr-01.sql.azuredeploy.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/SingleResourceProviders/Sql/sr-01.sql.azuredeploy.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -160,7 +160,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/KeyVault/2019-09-01/r01.accessPolicies.vaults.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/KeyVault/2019-09-01/r01.accessPolicies.vaults.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "keyVaultName": {
@@ -194,7 +194,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2015-05-01-preview/r01.keys.servers.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2015-05-01-preview/r01.keys.servers.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "sqlServerName": {
@@ -233,7 +233,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2015-05-01-preview/r01.encryptionProtector.servers.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2015-05-01-preview/r01.encryptionProtector.servers.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "sqlServerName": {
@@ -268,7 +268,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2020-04-01/r01.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2020-04-01/r01.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "name": {
@@ -308,7 +308,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "privateEndpointName": {

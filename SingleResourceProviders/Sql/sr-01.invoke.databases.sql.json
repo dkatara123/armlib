@@ -57,7 +57,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/SingleResourceProviders/Sql/sr-01.databases.sql.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/SingleResourceProviders/Sql/sr-01.databases.sql.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
