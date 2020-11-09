@@ -98,7 +98,7 @@
             "tags": {
             },
             "comments": "",
-            "name": "[concat(parameters('uniqueString'),'-r01.privateEndpoints-',parameters('indexNo'),'-',copyIndex())]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('dataFactoryName'),'-pep-',parameters('indexNo'),'-',copyIndex())]",
             "copy": {
                 "name": "copy-privateEndpoint-services",
                 "count": "[length(parameters('privateEndpointServices'))]",
