@@ -1,0 +1,183 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "sqlServerName": {
+            "type": "string"
+        },
+        "sqlLocalAdminUserName": {
+            "metadata": {
+                "description": "SQL server local admin username to use with connection string."
+            },
+            "type": "string"
+        },
+        "sqlLocalAdminPassword": {
+            "metadata": {
+                "description": "SQL server local admin password to use with connection string."
+            },
+            "type": "securestring"
+        },
+        "databases": {
+            "type": "array"
+        },
+        "connectionStringType": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "allowedValues": [
+                "ado",
+                "jdbc"
+            ],
+            "defaultValue": "ado"
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "keyVaultResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "condition": "[parameters('databases')[copyIndex()].deploy]",
+            "copy": {
+                "count": "[length(parameters('databases'))]",
+                "name": "copy-sr-01.databases.sql",
+                "mode": "Parallel"
+            },
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name)]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/SingleResourceProviders/Sql/sr-01.databases.sql.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "uniqueString": {
+                        "value": "[parameters('uniqueString')]"
+                    },
+                    "indexNo": {
+                        "value": "[copyIndex()]"
+                    },
+                    "_artifactsStorageSASToken": {
+                        "value": "[parameters('_artifactsStorageSASToken')]"
+                    },
+                    "_artifactsStorageContainerUrl": {
+                        "value": "[parameters('_artifactsStorageContainerUrl')]"
+                    },
+                    "databaseName": {
+                        "value": "[parameters('databases')[copyIndex()].name]"
+                    },
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "sqlLocalAdminUserName": {
+                        "value": "[parameters('sqlLocalAdminUserName')]"
+                    },
+                    "sqlLocalAdminPassword": {
+                        "value": "[parameters('sqlLocalAdminPassword')]"
+                    },
+                    "skuName": {
+                        "value": "[parameters('databases')[copyIndex()].sku.name]"
+                    },
+                    "skuTier": {
+                        "value": "[parameters('databases')[copyIndex()].sku.tier]"
+                    },
+                    "maxSizeBytes": {
+                        "value": "[parameters('databases')[copyIndex()].maxSizeBytes]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            },
+            "tags": {
+            }
+        },
+        {
+            "condition": "[parameters('databases')[copyIndex()].deploy]",
+            "copy": {
+                "count": "[length(parameters('databases'))]",
+                "name": "copy-r01.secrets.vaults",
+                "mode": "Parallel"
+            },
+            "resourceGroup": "[parameters('keyVaultResourceGroup')]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name,'-connstring')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/KeyVault/2019-09-01/r01.secrets.vaults.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[concat(parameters('databases')[copyIndex()].name,'-conn-string')]"
+                    },
+                    "keyVaultName": {
+                        "value": "[parameters('keyVaultName')]"
+                    },
+                    "value": {
+                        "value": "[if(equals(parameters('connectionStringType'),'ado'),reference(concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name)).outputs.adoConnectionString.value,reference(concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name)).outputs.jdbcConnectionString.value)]"
+                    },
+                    "contentType": {
+                        "value": "connection-string"
+                    },
+                    "enabled": {
+                        "value": true
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

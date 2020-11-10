@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "indexNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": ""
+        },
+        "sqlServerName": {
+            "value": ""
+        },
+        "sqlLocalAdminUserName": {
+            "value": ""
+        },
+        "sqlLocalAdminPassword": {
+            "value": ""
+        },
+        "databases": {
+            "value": []
+        },
+        "connectionStringType": {
+            "value": "ado"
+        },
+        "sendDiagnosticsToWorkspace": {
+            "value": false
+        },
+        "workspaceId": {
+            "value": null
+        },
+        "keyVaultName": {
+            "value": ""
+        },
+        "keyVaultResourceGroup": {
+            "value": ""
+        }
+    }
+}
