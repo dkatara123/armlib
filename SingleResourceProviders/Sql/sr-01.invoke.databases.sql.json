@@ -22,6 +22,18 @@
         "sqlServerName": {
             "type": "string"
         },
+        "sqlLocalAdminUserName": {
+            "metadata": {
+                "description": "SQL server local admin username to use with connection string."
+            },
+            "type": "string"
+        },
+        "sqlLocalAdminPassword": {
+            "metadata": {
+                "description": "SQL server local admin password to use with connection string."
+            },
+            "type": "securestring"
+        },
         "databases": {
             "type": "array"
         },
@@ -79,6 +91,12 @@
                     "sqlServerName": {
                         "value": "[parameters('sqlServerName')]"
                     },
+                    "sqlLocalAdminUserName": {
+                        "value": "[parameters('sqlLocalAdminUserName')]"
+                    },
+                    "sqlLocalAdminPassword": {
+                        "value": "[parameters('sqlLocalAdminPassword')]"
+                    },
                     "skuName": {
                         "value": "[parameters('databases')[copyIndex()].sku.name]"
                     },
@@ -105,5 +123,15 @@
         }
     ],
     "outputs": {
+        "dbConnectionString": {
+            "type": "array",
+            "copy": {
+                "count": "[length(parameters('databases'))]",
+                "input": {
+                    "ado": "[reference(concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex())).outputs.adoConnectionString.value]",
+                    "jdbc": "[reference(concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex())).outputs.jdbcConnectionString.value]"
+                }
+            }
+        }
     }
 }

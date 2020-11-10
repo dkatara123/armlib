@@ -22,6 +22,18 @@
         "sqlServerName": {
             "type": "string"
         },
+        "sqlLocalAdminUserName": {
+            "metadata": {
+                "description": "SQL server local admin username to use with connection string."
+            },
+            "type": "string"
+        },
+        "sqlLocalAdminPassword": {
+            "metadata": {
+                "description": "SQL server local admin password to use with connection string."
+            },
+            "type": "securestring"
+        },
         "databaseName": {
             "type": "string"
         },
@@ -52,6 +64,7 @@
     "functions": [
     ],
     "variables": {
+        "sqlDatabaseDeploymentName": "[concat(parameters('uniqueString'),'.',parameters('databaseName'),'.',parameters('sqlServerName'))]"
     },
     "resources": [
         {
@@ -60,7 +73,7 @@
             "comments": "",
             "tags": {
             },
-            "name": "[concat(parameters('uniqueString'),'.',parameters('databaseName'),'.',parameters('sqlServerName'))]",
+            "name": "[variables('sqlDatabaseDeploymentName')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -73,6 +86,12 @@
                     },
                     "sqlServerName": {
                         "value": "[parameters('sqlServerName')]"
+                    },
+                    "sqlLocalAdminUserName": {
+                        "value": "[parameters('sqlLocalAdminUserName')]"
+                    },
+                    "sqlLocalAdminPassword": {
+                        "value": "[parameters('sqlLocalAdminPassword')]"
                     },
                     "skuName": {
                         "value": "[parameters('skuName')]"
@@ -97,7 +116,7 @@
         },
         {
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'.',parameters('databaseName'),'.',parameters('sqlServerName'))]"
+                "[variables('sqlDatabaseDeploymentName')]"
             ],
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
@@ -155,5 +174,13 @@
         }
     ],
     "outputs": {
+        "adoConnectionString": {
+            "type": "string",
+            "value": "[reference(variables('sqlDatabaseDeploymentName')).outputs.adoConnectionString.value]"
+        },
+        "jdbcConnectionString": {
+            "type": "string",
+            "value": "[reference(variables('sqlDatabaseDeploymentName')).outputs.jdbcConnectionString.value]"
+        }
     }
 }

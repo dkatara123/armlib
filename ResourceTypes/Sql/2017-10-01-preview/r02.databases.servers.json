@@ -14,6 +14,18 @@
             },
             "type": "string"
         },
+        "sqlLocalAdminUserName": {
+            "metadata": {
+                "description": "SQL server local admin username to use with connection string."
+            },
+            "type": "string"
+        },
+        "sqlLocalAdminPassword": {
+            "metadata": {
+                "description": "SQL server local admin password to use with connection string."
+            },
+            "type": "securestring"
+        },
         "location": {
             "metadata": {
                 "description": "Resource location."
@@ -153,5 +165,13 @@
         }
     ],
     "outputs": {
+        "adoConnectionString": {
+            "type": "string",
+            "value": "[concat('Server=tcp:',parameters('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',parameters('databaseName'),';Persist Security Info=False;User ID=',parameters('sqlLocalAdminUserName'),';Password=',parameters('sqlLocalAdminPassword'),';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+        },
+        "jdbcConnectionString": {
+            "type": "string",
+            "value": "[concat('jdbc:sqlserver://',parameters('sqlServerName'),'.database.windows.net:1433;database=',parameters('databaseName'),';user=sqladmin@',parameters('sqlServerName'),';password=',parameters('sqlLocalAdminPassword'),';encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;')]"
+        }
     }
 }
