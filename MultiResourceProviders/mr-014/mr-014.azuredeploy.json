@@ -161,7 +161,7 @@
                 },
                 "parameters": {
                     "name": {
-                        "value": "[concat(parameters('databases')[copyIndex()].name,'-conn-string')]"
+                        "value": "[concat(parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name,'-connstring')]"
                     },
                     "keyVaultName": {
                         "value": "[parameters('keyVaultName')]"
