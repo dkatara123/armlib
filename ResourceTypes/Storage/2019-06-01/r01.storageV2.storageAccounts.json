@@ -95,5 +95,10 @@
             ]
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "primaryAccessKey": {
+            "type": "string",
+            "value": "[listKeys(parameters('name'),'2019-06-01').keys[0].value]"
+        }
+    }
 }
