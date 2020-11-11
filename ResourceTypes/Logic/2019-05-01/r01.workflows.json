@@ -36,6 +36,12 @@
                 "description": "description"
             },
             "defaultValue": null
+        },
+        "accessControl": {
+            "type": "object",
+            "metadata": {
+                "description": "description"
+            }
         }
     },
     "functions": [],
@@ -73,35 +79,7 @@
                         }
                     }
                 },
-                "accessControl": {
-                    "triggers": {
-                        "allowedCallerIpAddresses": [
-                            {
-                                "addressRange": "20.185.109.156/32"
-                            },
-                            {
-                                "addressRange": "20.185.106.213/32"
-                            }
-                        ],
-                        "openAuthenticationPolicies": {
-                            "policies": {
-                                "AAD-Policy": {
-                                    "type": "AAD",
-                                    "claims": [
-                                        {
-                                            "name": "iss",
-                                            "value": "https://sts.windows.net/188697ab-840f-44ec-8535-aaaa5680bab0/"
-                                        },
-                                        {
-                                            "name": "aud",
-                                            "value": "https://management.azure.com"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
+                "accessControl": "[parameters('accessControl')]"
             },
             "resources": [
                 {
