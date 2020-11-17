@@ -2,16 +2,16 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "keyVaultName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of KeyVault Linked Service."
-            }
-        },
         "factoryName": {
             "type": "string",
             "metadata": {
                 "description": "Data Factory Name."
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of KeyVault Linked Service."
             }
         },
         "keyVaultUrl": {
