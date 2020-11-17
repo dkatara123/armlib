@@ -1,6 +1,6 @@
 {
   "type": "MultiResourceProviders",
   "Id": "mr-011",
-  "displayName": "General storage v2 account with multi containers, fileShares, private endpoints and upload primary key to keyvault.",
+  "displayName": "General storage v2 account with multi containers, fileShares, private endpoints and upload primary connection string to keyvault.",
   "description": ""
 }

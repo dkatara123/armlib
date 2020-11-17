@@ -215,7 +215,7 @@
                 "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'))]"
             ],
             "resourceGroup": "[parameters('keyVaultResourceGroup')]",
-            "name": "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'),'-primarykey')]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'),'-connstring')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "properties": {
@@ -226,16 +226,16 @@
                 },
                 "parameters": {
                     "name": {
-                        "value": "[concat(parameters('storageAccountName'),'-primarykey')]"
+                        "value": "[concat(parameters('storageAccountName'),'-connstring')]"
                     },
                     "keyVaultName": {
                         "value": "[parameters('keyVaultName')]"
                     },
                     "value": {
-                        "value": "[reference(concat(parameters('uniqueString'),'-',parameters('storageAccountName'))).outputs.primaryAccessKey.value]"
+                        "value": "[reference(concat(parameters('uniqueString'),'-',parameters('storageAccountName'))).outputs.primaryConnectionString.value]"
                     },
                     "contentType": {
-                        "value": "access-key"
+                        "value": "connection-string"
                     },
                     "enabled": {
                         "value": true
