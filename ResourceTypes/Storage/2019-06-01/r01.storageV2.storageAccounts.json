@@ -99,6 +99,10 @@
         "primaryAccessKey": {
             "type": "string",
             "value": "[listKeys(parameters('name'),'2019-06-01').keys[0].value]"
+        },
+        "primaryConnectionString": {
+            "type": "string",
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('name'), ';AccountKey=', listKeys(parameters('name'),'2019-06-01').keys[0].value)]"
         }
     }
 }
