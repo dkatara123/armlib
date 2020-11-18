@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-010",
+  "displayName": "Keyvault with Private Endpoint.",
+  "description": ""
+}

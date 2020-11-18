@@ -73,6 +73,20 @@
             "metadata": {
                 "description": "Rules governing the accessibility of the key vault from specific network locations. "
             }
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
         }
     },
     "functions": [],
@@ -101,7 +115,33 @@
                 "enablePurgeProtection": true,
                 "networkAcls": "[parameters('networkAcls')]"
             },
-            "resources": []
+            "resources": [
+                {
+                    "condition": "[parameters('sendDiagnosticsToWorkspace')]",
+                    "type": "providers/diagnosticSettings",
+                    "name": "Microsoft.Insights/SendToLogAnalytics",
+                    "dependsOn": [
+                        "[parameters('name')]"
+                    ],
+                    "apiVersion": "2017-05-01-preview",
+                    "properties": {
+                        "name": "SendToLogAnalytics",
+                        "workspaceId": "[parameters('workspaceId')]",
+                        "logs": [
+                            {
+                                "category": "AuditEvent",
+                                "enabled": true
+                            }
+                        ],
+                        "metrics": [
+                            {
+                                "category": "AllMetrics",
+                                "enabled": true
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     ],
     "outputs": {}

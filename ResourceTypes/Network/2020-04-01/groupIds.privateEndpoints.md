@@ -10,3 +10,5 @@
 8. DocumentDB - MongoDB API = MongoDB
 9. Azure SQL PaaS Server = sqlServer
 10. Service Bus - namespace
+11. Data Factory - dataFactory
+12. Data Factory - portal

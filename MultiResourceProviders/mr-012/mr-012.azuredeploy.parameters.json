@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "iterationNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "https://conpeusiddartifacts01sa.blob.core.windows.net/published-artifacts"
+        },
+        "sqlServerName": {
+            "value": ""
+        },
+        "aadGroupName": {
+            "value": ""
+        },
+        "aadGroupObjectId": {
+            "value": ""
+        },
+        "administratorLogin": {
+            "value": ""
+        },
+        "administratorLoginPassword": {
+            "value": ""
+        },
+        "workspaceName": {
+            "value": ""
+        },
+        "workspaceResourceGroup": {
+            "value": ""
+        },
+        "keyVaultName": {
+            "value": ""
+        },
+        "keyVaultResourceGroup": {
+            "value": ""
+        },
+        "keyName": {
+            "value": ""
+        },
+        "keyVersion": {
+            "value": ""
+        },
+        "serverKeyType": {
+            "value": ""
+        },
+        "keyVaultUri": {
+            "value": ""
+        },
+        "virtualNetworkRules": {
+            "value": []
+        },
+        "virtualNetworkResourceGroupName": {
+            "value": ""
+        },
+        "virtualNetworkName": {
+            "value": ""
+        },
+        "subnetName": {
+            "value": ""
+        },
+        "privateEndpointServices": {
+            "value": ""
+        }
+    }
+}

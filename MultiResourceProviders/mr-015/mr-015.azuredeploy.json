@@ -48,6 +48,18 @@
         },
         "privateEndpointServices": {
             "type": "array"
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "keyVaultResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
         }
     },
     "functions": [
@@ -62,7 +74,7 @@
             "tags": {
             },
             "comments": "",
-            "name": "[concat(parameters('uniqueString'),'-r01.storageV2.storageAccounts-',parameters('indexNo'))]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'))]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -83,7 +95,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-r01.storageV2.storageAccounts-',parameters('indexNo'))]"
+                "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'))]"
             ],
             "tags": {
             },
@@ -120,7 +132,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-r01.storageV2.storageAccounts-',parameters('indexNo'))]"
+                "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'))]"
             ],
             "tags": {
             },
@@ -157,7 +169,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-r01.storageV2.storageAccounts-',parameters('indexNo'))]"
+                "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'))]"
             ],
             "tags": {
             },
@@ -199,39 +211,35 @@
             }
         },
         {
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'))]"
+            ],
+            "resourceGroup": "[parameters('keyVaultResourceGroup')]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'),'-connstring')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "dependsOn": [
-                "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'),'-pep-',parameters('indexNo'),'-',copyIndex())]"
-            ],
-            "tags": {
-            },
-            "comments": "",
-            "name": "[concat(parameters('uniqueString'),'-r01.privateDnsZoneGroups.privateEndpoints-',parameters('indexNo'),'-',copyIndex())]",
-            "copy": {
-                "name": "copy-privateDnsZoneGroups",
-                "count": "[length(parameters('privateEndpointServices'))]",
-                "mode": "Parallel"
-            },
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/KeyVault/2019-09-01/r01.secrets.vaults.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "privateEndpointName": {
-                        "value": "[concat('pep-',parameters('storageAccountName'),'-',parameters('privateEndpointServices')[copyIndex()])]"
+                    "name": {
+                        "value": "[concat(parameters('storageAccountName'),'-connstring')]"
                     },
-                    "virtualNetworkResourceGroupName": {
-                        "value": "[parameters('virtualNetworkResourceGroupName')]"
+                    "keyVaultName": {
+                        "value": "[parameters('keyVaultName')]"
                     },
-                    "privateDnsZone": {
-                        "value": "[parameters('privateEndpointServices')[copyIndex()]]"
+                    "value": {
+                        "value": "[reference(concat(parameters('uniqueString'),'-',parameters('storageAccountName'))).outputs.primaryConnectionString.value]"
+                    },
+                    "contentType": {
+                        "value": "connection-string"
+                    },
+                    "enabled": {
+                        "value": true
                     }
-                },
-                "debugSetting": {
-                    "detailLevel": "requestContent, responseContent"
                 }
             }
         }

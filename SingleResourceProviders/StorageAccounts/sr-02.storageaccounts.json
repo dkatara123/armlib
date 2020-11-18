@@ -42,7 +42,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Storage/2019-06-01/r01.blobStorage.storageAccounts.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Storage/2019-06-01/r01.blobStorage.storageAccounts.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "name": {
@@ -73,7 +73,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Storage/2019-06-01/r01.containers.blobServices.storageAccounts.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Storage/2019-06-01/r01.containers.blobServices.storageAccounts.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "storageAccountName": {

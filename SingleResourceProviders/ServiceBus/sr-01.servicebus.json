@@ -67,7 +67,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/ServiceBus/2018-01-01-preview/r01.namespaces.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/ServiceBus/2018-01-01-preview/r01.namespaces.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "name": {
@@ -104,7 +104,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/ServiceBus/2017-04-01/r01.queues.namespaces.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/ServiceBus/2017-04-01/r01.queues.namespaces.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "name": {
@@ -138,7 +138,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/ServiceBus/2017-04-01/r01.topics.namespaces.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/ServiceBus/2017-04-01/r01.topics.namespaces.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "name": {

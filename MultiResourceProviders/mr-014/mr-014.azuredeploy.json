@@ -37,19 +37,40 @@
         "databases": {
             "type": "array"
         },
+        "connectionStringType": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "allowedValues": [
+                "ado",
+                "jdbc"
+            ],
+            "defaultValue": "ado"
+        },
         "sendDiagnosticsToWorkspace": {
             "type": "bool",
             "metadata": {
                 "description": "description"
-            },
-            "defaultValue": false
+            }
         },
         "workspaceId": {
             "type": "string",
             "metadata": {
                 "description": "description"
-            },
-            "defaultValue": null
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "keyVaultResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
         }
     },
     "functions": [
@@ -61,10 +82,10 @@
             "condition": "[parameters('databases')[copyIndex()].deploy]",
             "copy": {
                 "count": "[length(parameters('databases'))]",
-                "name": "copy-sr-01.databases.sql.json",
+                "name": "copy-sr-01.databases.sql",
                 "mode": "Parallel"
             },
-            "name": "[concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex())]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name)]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "properties": {
@@ -120,18 +141,43 @@
             },
             "tags": {
             }
-        }
-    ],
-    "outputs": {
-        "dbConnectionString": {
-            "type": "array",
+        },
+        {
+            "condition": "[parameters('databases')[copyIndex()].deploy]",
             "copy": {
                 "count": "[length(parameters('databases'))]",
-                "input": {
-                    "ado": "[reference(concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex())).outputs.adoConnectionString.value]",
-                    "jdbc": "[reference(concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex())).outputs.jdbcConnectionString.value]"
+                "name": "copy-r01.secrets.vaults",
+                "mode": "Parallel"
+            },
+            "resourceGroup": "[parameters('keyVaultResourceGroup')]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name,'-connstring')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/KeyVault/2019-09-01/r01.secrets.vaults.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[concat(parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name,'-connstring')]"
+                    },
+                    "keyVaultName": {
+                        "value": "[parameters('keyVaultName')]"
+                    },
+                    "value": {
+                        "value": "[if(equals(parameters('connectionStringType'),'ado'),reference(concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name)).outputs.adoConnectionString.value,reference(concat(parameters('uniqueString'),'-',parameters('sqlServerName'),'-',parameters('databases')[copyIndex()].name)).outputs.jdbcConnectionString.value)]"
+                    },
+                    "contentType": {
+                        "value": "connection-string"
+                    },
+                    "enabled": {
+                        "value": true
+                    }
                 }
             }
         }
-    }
+    ],
+    "outputs": {}
 }

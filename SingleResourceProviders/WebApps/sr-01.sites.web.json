@@ -137,7 +137,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Web/2018-11-01/r01.sites.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2018-11-01/r01.sites.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -204,7 +204,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/DeploymentScripts/ds-001/ds-001.azuredeploy.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/DeploymentScripts/ds-001/ds-001.azuredeploy.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "identity": {
@@ -243,7 +243,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Web/2019-08-01/r01.vnet.config.sites.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2019-08-01/r01.vnet.config.sites.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {

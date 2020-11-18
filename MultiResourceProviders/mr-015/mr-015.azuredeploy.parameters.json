@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "indexNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "https://conpeusiddartifacts01sa.blob.core.windows.net/published-artifacts"
+        },
+        "storageAccountName": {
+            "value": ""
+        },
+        "containers": {
+            "value": [
+               
+            ]
+        },
+        "fileShares": {
+            "value": [
+               
+            ]
+        },
+        "virtualNetworkResourceGroupName": {
+            "value": ""
+        },
+        "virtualNetworkName": {
+            "value": ""
+        },
+        "subnetName": {
+            "value": ""
+        },
+        "privateEndpointServices": {
+            "value": [
+               
+            ]
+        },
+        "keyVaultName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "keyVaultResourceGroup": {
+            "value": "" // TODO: Fill in parameter value
+        }
+    }
+}

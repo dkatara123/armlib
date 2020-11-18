@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-014",
+  "displayName": "SQL DB with connection string in key vault.",
+  "description": ""
+}

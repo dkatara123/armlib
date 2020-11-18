@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-002",
+  "displayName": "Az SQL with TDE Encryption using KeyVault Key and Private Endpoints.",
+  "description": ""
+}

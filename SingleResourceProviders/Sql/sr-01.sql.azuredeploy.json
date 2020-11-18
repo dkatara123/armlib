@@ -57,7 +57,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2019-06-01-preview/r01.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2019-06-01-preview/r01.servers.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -88,7 +88,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2019-06-01-preview/r01.master.databases.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2019-06-01-preview/r01.master.databases.servers.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -113,7 +113,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-05-01-preview/r01.diagnosticSettings.databases.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2017-05-01-preview/r01.diagnosticSettings.databases.servers.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -156,7 +156,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-03-01-preview/r01.auditingSettings.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2017-03-01-preview/r01.auditingSettings.servers.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -192,7 +192,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2015-05-01-preview/r01.virtualNetworkRules.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2015-05-01-preview/r01.virtualNetworkRules.servers.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -223,7 +223,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2019-06-01-preview/r01.administrators.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2019-06-01-preview/r01.administrators.servers.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -254,7 +254,7 @@
             "apiVersion": "2019-10-01",
             "properties": {
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Sql/2017-03-01-preview/r01.securityPolicies.servers.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Sql/2017-03-01-preview/r01.securityPolicies.servers.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {

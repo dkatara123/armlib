@@ -1,0 +1,139 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "dataFactoryName": {
+            "type": "string"
+        },
+        "virtualNetworkResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the subnet from which the private IP will be allocated."
+            }
+        },
+        "privateEndpointServices": {
+            "type": "array"
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool"
+        },
+        "workspaceName": {
+            "type": "string"
+        },
+        "workspaceResourceGroup": {
+            "type": "string"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "virtualNetworkResourceId": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
+        "workspaceId": "[resourceId(parameters('workspaceResourceGroup'),'Microsoft.OperationalInsights/workspaces',parameters('workspaceName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-r01.factories-',parameters('indexNo'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/DataFactory/2018-06-01/r01.factories.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('dataFactoryName')]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[variables('workspaceId')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-r01.factories-',parameters('indexNo'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('dataFactoryName'),'-pep-',parameters('indexNo'),'-',copyIndex())]",
+            "copy": {
+                "name": "copy-privateEndpoint-services",
+                "count": "[length(parameters('privateEndpointServices'))]",
+                "mode": "Parallel"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2020-04-01/r01.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[concat('pep-',parameters('dataFactoryName'),'-',parameters('privateEndpointServices')[copyIndex()])]"
+                    },
+                    "virtualNetworkId": {
+                        "value": "[variables('virtualNetworkResourceId')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "privateLinkServiceId": {
+                        "value": "[resourceId('Microsoft.DataFactory/factories',parameters('dataFactoryName'))]"
+                    },
+                    "groupIds": {
+                        "value": [
+                            "[parameters('privateEndpointServices')[copyIndex()]]"
+                        ]
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

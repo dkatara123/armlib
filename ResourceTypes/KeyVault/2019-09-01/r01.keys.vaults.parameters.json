@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaultName": {
+            "value": "kvl-use-pdp-d1"
+        },
+        "keyName": {
+            "value": "storagekek"
+        },
+        "keySize": {
+            "value": 2048
+        },
+        "keyType": {
+            "value": "RSA"
+        },
+        "keyOps": {
+            "value": []
+        },
+        "curveName": {
+            "value": ""
+        }
+    }
+}

@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "Key Vault Name"
+            }
+        },
+        "keyName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name for the new key. The system will generate the version name for the new key."
+            }
+        },
+        "keySize": {
+            "type": "int",
+            "defaultValue": -1,
+            "metadata": {
+                "description": "The key size in bits. For example: 2048, 3072, or 4096 for RSA."
+            }
+        },
+        "keyType": {
+            "type": "string",
+            "metadata": {
+                "description": "The JsonWebKeyType of the key to be created."
+            },
+            "allowedValues": [
+                "EC",
+                "EC-HSM",
+                "RSA",
+                "RSA-HSM"
+            ],
+            "defaultValue": "RSA"
+        },
+        "keyOps": {
+            "type": "array",
+            "defaultValue": [],
+            "metadata": {
+                "description": "The permitted JSON web key operations of the key to be created. Supported array values - encrypt,decrypt,sign,verify,wrapKey,unwrapKey"
+            }
+        },
+        "curveName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The JsonWebKeyCurveName of the key to be created."
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults/keys",
+            "apiVersion": "2019-09-01",
+            "name": "[ concat(parameters('vaultName'), '/', parameters('keyName')) ]",
+            "location": "[ resourceGroup().location ]",
+            "properties": {
+                "kty": "[ parameters('keyType') ]",
+                "keyOps": "[ parameters('keyOps') ]",
+                "keySize": "[ if(equals(parameters('keySize'), -1), json('null'), parameters('keySize')) ]",
+                "curveName": "[ parameters('curveName') ]"
+            }
+        }
+    ],
+    "outputs": {
+        "proxyKey": {
+            "type": "object",
+            "value": "[ reference(resourceId('Microsoft.KeyVault/vaults/keys', parameters('vaultName'), parameters('keyName'))) ]"
+        }
+    }
+}

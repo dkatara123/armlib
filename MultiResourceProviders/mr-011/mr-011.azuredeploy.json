@@ -197,43 +197,6 @@
                     "detailLevel": "requestContent, responseContent"
                 }
             }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01",
-            "dependsOn": [
-                "[concat(parameters('uniqueString'),'-',parameters('storageAccountName'),'-pep-',parameters('indexNo'),'-',copyIndex())]"
-            ],
-            "tags": {
-            },
-            "comments": "",
-            "name": "[concat(parameters('uniqueString'),'-r01.privateDnsZoneGroups.privateEndpoints-',parameters('indexNo'),'-',copyIndex())]",
-            "copy": {
-                "name": "copy-privateDnsZoneGroups",
-                "count": "[length(parameters('privateEndpointServices'))]",
-                "mode": "Parallel"
-            },
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
-                },
-                "parameters": {
-                    "privateEndpointName": {
-                        "value": "[concat('pep-',parameters('storageAccountName'),'-',parameters('privateEndpointServices')[copyIndex()])]"
-                    },
-                    "virtualNetworkResourceGroupName": {
-                        "value": "[parameters('virtualNetworkResourceGroupName')]"
-                    },
-                    "privateDnsZone": {
-                        "value": "[parameters('privateEndpointServices')[copyIndex()]]"
-                    }
-                },
-                "debugSetting": {
-                    "detailLevel": "requestContent, responseContent"
-                }
-            }
         }
     ],
     "outputs": {}

@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "indexNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "dataFactoryName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "virtualNetworkResourceGroupName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "virtualNetworkName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "subnetName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "privateEndpointServices": {
+            "value": [
+                // TODO: Fill in parameter value
+            ]
+        }
+    }
+}

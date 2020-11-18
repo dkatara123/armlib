@@ -47,7 +47,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/ManagedIdentity/2018-11-30/r01.userAssignedIdentities.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/ManagedIdentity/2018-11-30/r01.userAssignedIdentities.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "name": {
@@ -69,7 +69,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/ARM-Templates-Library/ResourceTypes/Authorization/2018-09-01-preview/r01.roleAssignments.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Authorization/2018-09-01-preview/r01.roleAssignments.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "roleDefinitionGuid": {

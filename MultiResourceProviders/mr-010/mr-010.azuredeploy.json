@@ -48,6 +48,24 @@
         },
         "privateEndpointServices": {
             "type": "string"
+        },
+        "enabledForTemplateDeployment": {
+            "type": "bool",
+            "metadata": {
+                "description": "Property to specify whether Azure Resource Manager is permitted to retrieve secrets from the key vault."
+            }
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
         }
     },
     "functions": [
@@ -57,7 +75,7 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('uniqueString'),'-r01.vaults.json-',parameters('indexNo'))]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "properties": {
@@ -71,6 +89,15 @@
                     },
                     "networkAcls": {
                         "value": "[parameters('networkAcls')]"
+                    },
+                    "enabledForTemplateDeployment": {
+                        "value": "[parameters('enabledForTemplateDeployment')]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
                     }
                 },
                 "mode": "Incremental",
@@ -83,7 +110,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-r01.vaults.json-',parameters('indexNo'))]"
+                "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'))]"
             ],
             "name": "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-pep')]",
             "properties": {
@@ -109,38 +136,6 @@
                         "value": [
                             "[parameters('privateEndpointServices')]"
                         ]
-                    }
-                },
-                "debugSetting": {
-                    "detailLevel": "requestContent, responseContent"
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01",
-            "dependsOn": [
-                "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-pep')]"
-            ],
-            "tags": {
-            },
-            "comments": "",
-            "name": "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-dnszones')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
-                },
-                "parameters": {
-                    "privateEndpointName": {
-                        "value": "[concat('pep-',parameters('keyVaultName'),'-',parameters('privateEndpointServices'))]"
-                    },
-                    "virtualNetworkResourceGroupName": {
-                        "value": "[parameters('privateEndpointVnetResourceGroup')]"
-                    },
-                    "privateDnsZone": {
-                        "value": "[parameters('privateEndpointServices')]"
                     }
                 },
                 "debugSetting": {
