@@ -51,6 +51,12 @@
         },
         "workspaceResourceGroup": {
             "type": "string"
+        },
+        "keyVaultName": {
+            "type": "string"
+        },
+        "keyVaultResourceGroup": {
+            "type": "string"
         }
     },
     "functions": [
@@ -131,6 +137,39 @@
                 },
                 "debugSetting": {
                     "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-r01.factories-',parameters('indexNo'))]"
+            ],
+            "resourceGroup": "[parameters('keyVaultResourceGroup')]",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('dataFactoryName'),'-vaultAccessPolicies')]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/KeyVault/2019-09-01/r01.accessPolicies.vaults.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[parameters('keyVaultName')]"
+                    },
+                    "objectId": {
+                        "value": "[reference(concat(parameters('uniqueString'),'-r01.factories-',parameters('indexNo'))).outputs.principalId.value]"
+                    },
+                    "secrets": {
+                        "value": [
+                            "get"
+                        ]
+                    }
                 }
             }
         }

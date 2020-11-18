@@ -28,6 +28,17 @@
                 "description": "description"
             },
             "defaultValue": null
+        },
+        "publicNetworkAccess": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "defaultValue": "Disabled"
         }
     },
     "functions": [],
@@ -42,7 +53,9 @@
             "identity": {
                 "type": "SystemAssigned"
             },
-            "properties": {},
+            "properties": {
+                "publicNetworkAccess": "[parameters('publicNetworkAccess')]"
+            },
             "resources": [
                 {
                     "condition": "[parameters('sendDiagnosticsToWorkspace')]",
@@ -104,5 +117,10 @@
             ]
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "principalId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.DataFactory/factories', parameters('name')),'2018-06-01','Full').identity.principalId]"
+        }
+    }
 }

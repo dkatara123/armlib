@@ -1,6 +1,6 @@
 {
   "type": "MultiResourceProviders",
-  "Id": "mr-001",
-  "displayName": "Service bus with topics, queues and private endpoints.",
+  "Id": "mr-013",
+  "displayName": "Azure Data Factory with Private Endpoint and Get Secret access on Key Vault.",
   "description": ""
 }
