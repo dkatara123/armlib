@@ -57,6 +57,9 @@
         },
         "keyVaultResourceGroup": {
             "type": "string"
+        },
+        "publicNetworkAccess": {
+            "type": "string"
         }
     },
     "functions": [
@@ -88,6 +91,9 @@
                     },
                     "workspaceId": {
                         "value": "[variables('workspaceId')]"
+                    },
+                    "publicNetworkAccess": {
+                        "value": "[parameters('publicNetworkAccess')]"
                     }
                 },
                 "debugSetting": {
