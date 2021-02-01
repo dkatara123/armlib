@@ -1,0 +1,86 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the workspace."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "The geo-location where the resource lives."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "sku_Name": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the SKU."
+            },
+            "allowedValues": [ "Free", "Standard", "Premium", "PerNode", "PerGB2018", "Standalone", "CapacityReservation" ],
+            "defaultValue": "PerGB2018"
+        },
+        "retentionInDays": {
+            "type": "int",
+            "metadata": {
+                "description": "The workspace data retention in days, between 30 and 730."
+            },
+            "minValue": 30,
+            "maxValue": 730,
+            "defaultValue": 90
+        },
+        "workspaceCapping_dailyQuotaGb": {
+            "type": "int",
+            "metadata": {
+                "description": "The workspace daily quota for ingestion."
+            },
+            "minValue": -1,
+            "defaultValue": -1
+        },
+        "publicNetworkAccessForIngestion": {
+            "type": "string",
+            "metadata": {
+                "description": "The network access type for operating on the Log Analytics Workspace. Enables or disables public connectivity for ingestion to Log Analytics through public DNS."
+            },
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "defaultValue": "Disabled"
+        },
+        "publicNetworkAccessForQuery": {
+            "type": "string",
+            "metadata": {
+                "description": "The network access type for operating on the Log Analytics Workspace. Enables or disables public connectivity for query to Log Analytics through public DNS."
+            },
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "defaultValue": "Disabled"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.operationalinsights/workspaces",
+            "apiVersion": "2020-03-01-preview",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "name": "[parameters('sku_Name')]"
+                },
+                "retentionInDays": "[parameters('retentionInDays')]",
+                "workspaceCapping": {
+                    "dailyQuotaGb": "[parameters('workspaceCapping_dailyQuotaGb')]"
+                },
+                "publicNetworkAccessForIngestion": "[parameters('publicNetworkAccessForIngestion')]",
+                "publicNetworkAccessForQuery": "[parameters('publicNetworkAccessForQuery')]"
+            }
+        }
+    ]
+}
