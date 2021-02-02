@@ -128,8 +128,8 @@
             "copy": {
                 "count": "[length(parameters('databases'))]",
                 "input": {
-                    "ado": "[reference(concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex())).outputs.adoConnectionString.value]",
-                    "jdbc": "[reference(concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex())).outputs.jdbcConnectionString.value]"
+                    "ado": "[reference(concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex()),'2019-10-01').outputs.adoConnectionString.value]",
+                    "jdbc": "[reference(concat(parameters('uniqueString'),'-sr-01.databases.sql.json-',parameters('indexNo'),'-',copyIndex()),'2019-10-01').outputs.jdbcConnectionString.value]"
                 }
             }
         }

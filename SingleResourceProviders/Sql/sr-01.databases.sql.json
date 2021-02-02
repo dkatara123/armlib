@@ -176,11 +176,11 @@
     "outputs": {
         "adoConnectionString": {
             "type": "string",
-            "value": "[reference(variables('sqlDatabaseDeploymentName')).outputs.adoConnectionString.value]"
+            "value": "[reference(variables('sqlDatabaseDeploymentName'),'2019-10-01').outputs.adoConnectionString.value]"
         },
         "jdbcConnectionString": {
             "type": "string",
-            "value": "[reference(variables('sqlDatabaseDeploymentName')).outputs.jdbcConnectionString.value]"
+            "value": "[reference(variables('sqlDatabaseDeploymentName'),'2019-10-01').outputs.jdbcConnectionString.value]"
         }
     }
 }
