@@ -167,6 +167,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
+                "[concat(parameters('uniqueString'),'-sr-01.servicebus.json-',parameters('indexNo'))]",
                 "[concat(parameters('uniqueString'),'-',parameters('namespaceName'),'-pep')]"
             ],
             "name": "[concat(parameters('uniqueString'),'-',parameters('namespaceName'),'-dnszones')]",
