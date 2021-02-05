@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-016",
+  "displayName": "windows Function App with storage account, application insight, VNet Integration and Private Endpoints.",
+  "description": ""
+}

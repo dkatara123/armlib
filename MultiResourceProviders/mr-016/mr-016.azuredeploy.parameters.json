@@ -1,0 +1,75 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "indexNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": "?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-02-05T20:14:51Z&st=2021-02-05T12:14:51Z&spr=https&sig=YLGz4Vj2cHVPpnM7Xti9GWoU0gnbVea9A8VDLATOVeE%3D"
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": "https://conpeusiddartifacts01sa.blob.core.windows.net/published-artifacts"
+        },
+        "name": {
+            "value": "stgtestanu"
+        },
+        "appServicPlan": {
+            "value": [
+                {
+                    "name": "testpdpasp",
+                    "resourceGroup": "anu-test-rg",
+                    "skuTier": "PremiumV2",
+                    "skuName": "P1v2",
+                    "type": "windows"
+                }
+            ]
+        },
+        "hostingPlanName": {
+            "value": ""
+        },
+        "serverFarmResourceGroup": {
+            "value": "anu-test-rg"
+        },
+        "storageAccountResourceGroup": {
+            "value": "anu-test-rg"
+        },
+        "storageAccountName": {
+            "value": "testanustggh"
+        },
+        "windowsFxVersion": {
+            "value": ""
+        },
+        "ipSecurityRestrictions": {
+            "value": [
+               
+            ]
+        },
+        "virtualNetworkResourceGroupName": {
+            "value": ""
+        },
+        "virtualNetworkName": {
+            "value": ""
+        },
+        "subnetName": {
+            "value": ""
+        },
+        "privateEndpointServices": {
+            "value": ""
+        },
+        "functions_worker_runtime": {
+            "value": "powershell"
+        },
+        "runtimeVersion": {
+            "value": "~3"
+        },
+        "vnetIntegration": {
+            "value": {
+               
+            }
+        }
+    }
+}
