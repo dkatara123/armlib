@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "location": {
+            "type": "String",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "rules": {
+            "type": "array",
+            "metadata": {
+                "description": "Network Security Group Rules"
+            },
+            "defaultValue":[{
+                "name": "allow-ssh",
+                "description": "Allow SSH",
+                "protocol": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "sourcePortRanges": [],
+                "sourceAddressPrefix": "*",
+                "sourceAddressPrefixes": [],
+                "destinationPortRange": "22",
+                "destinationPortRanges": [],
+                "destinationAddressPrefix": "*",
+                "destinationAddressPrefixes": []
+            }]
+        }        
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "apiVersion": "2020-07-01",            
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "tags": {
+            },
+            "properties": {
+                "copy": [
+                    {
+                        "name": "securityRules",
+                        "count": "[length(parameters('rules'))]",
+                        "input": {
+                            "name": "[parameters('rules')[copyIndex('securityRules')].name]",
+                            "properties": {
+                                "description": "[parameters('rules')[copyIndex('securityRules')].description]",
+                                "protocol": "[parameters('rules')[copyIndex('securityRules')].protocol]",
+                                "access": "[parameters('rules')[copyIndex('securityRules')].access]",
+                                "priority": "[parameters('rules')[copyIndex('securityRules')].priority]",
+                                "direction": "[parameters('rules')[copyIndex('securityRules')].direction]",
+                                "sourcePortRange": "[parameters('rules')[copyIndex('securityRules')].sourcePortRange]",
+                                "sourcePortRanges": "[parameters('rules')[copyIndex('securityRules')].sourcePortRanges]",
+                                "sourceAddressPrefix": "[parameters('rules')[copyIndex('securityRules')].sourceAddressPrefix]",
+                                "sourceAddressPrefixes": "[parameters('rules')[copyIndex('securityRules')].sourceAddressPrefixes]",
+                                "destinationPortRange": "[parameters('rules')[copyIndex('securityRules')].destinationPortRange]",
+                                "destinationPortRanges": "[parameters('rules')[copyIndex('securityRules')].destinationPortRanges]",
+                                "destinationAddressPrefix": "[parameters('rules')[copyIndex('securityRules')].destinationAddressPrefix]",
+                                "destinationAddressPrefixes": "[parameters('rules')[copyIndex('securityRules')].destinationAddressPrefixes]"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
