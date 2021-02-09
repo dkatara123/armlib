@@ -47,9 +47,6 @@
             "metadata": {
                 "descrption": "SSL certificate from KeyVault"
             }        
-        },
-        "frontendFQDN": {
-            "type": "string"
         }
     },
     "variables": {
