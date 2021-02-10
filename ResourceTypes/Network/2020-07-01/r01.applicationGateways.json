@@ -72,7 +72,7 @@
                 ],
                 "frontendIPConfigurations": [
                 {
-                    "name": "appGatewayFrontendIP",
+                    "name": "publicFrontendIp",
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "publicIPAddress": {
@@ -122,7 +122,7 @@
                         "name": "listener1_Https",
                         "properties": {
                             "frontendIPConfiguration": {
-                                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/privateFrontendIp1')]"
+                                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/publicFrontendIp')]"
                             },
                             "frontendPort": {
                                 "id": "[concat(variables('applicationGatewayId'), '/frontendPorts/port_443')]"
