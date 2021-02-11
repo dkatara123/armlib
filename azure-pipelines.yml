@@ -17,7 +17,7 @@ steps:
   inputs:
     Contents: |
       **/*.json
-      **/Scripts/*.ps1
+      **/Scripts/**/*.ps1
     TargetFolder: '$(build.artifactstagingdirectory)'
 - task: PublishBuildArtifacts@1
   inputs:
