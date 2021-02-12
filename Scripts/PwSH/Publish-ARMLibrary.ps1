@@ -110,7 +110,7 @@ process {
 
     # Publish Artifacts.
     Write-Host "`nPublish directories from $LiteralPath to storage account."
-    $filePaths = ""
+    $filePaths = []
 
     # Copy files from the local storage staging location to the storage account container
     foreach ($Directory in $LiteralPath) {
