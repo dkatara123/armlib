@@ -131,7 +131,7 @@ process {
 
     "`nPublish files to storage account."
     foreach ($filePath in $filePaths) {
-        Set-AzStorageBlobContent -File $filePath -Blob $filePath.Substring((Resolve-Path($Directory)).length + 1) `
+        Set-AzStorageBlobContent -File $filePath -Blob $filePath.Substring($Directory.length + 1) `
             -Container $Container -Context $storageObj.Context -Force -AsJob | Format-Table
     }
 
