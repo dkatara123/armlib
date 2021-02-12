@@ -25,11 +25,6 @@
 
 [CmdletBinding()]
 param (
-    # Storage Account Resource Group
-    [Parameter(Mandatory = $true)]
-    [string]
-    $ResourceGroup,
-
     # Name of Storage Account.
     [Parameter(Mandatory = $true)]
     [string]
