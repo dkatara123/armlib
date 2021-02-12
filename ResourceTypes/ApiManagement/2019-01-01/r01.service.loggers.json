@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the APIM instance"
+            }
+        },
+        "loggers": {
+            "type": "array",
+            "metadata": {
+                "description": "APIM service loggers"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/loggers",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('loggers')[copyIndex('loggers_copy')].name)]",
+            "dependsOn": [],
+            "properties": {
+                "loggerType": "applicationInsights",
+                "isBuffered": true,                
+                "credentials": "[parameters('loggers')[copyIndex('loggers_copy')].credentials]",
+                "resourceId": "[resourceId('microsoft.insights/components', parameters('loggers')[copyIndex('loggers_copy')].appinsightsName)]"
+            },
+            "copy": {
+                "name": "loggers_copy",
+                "count": "[length(parameters('loggers'))]"
+            }
+        }
+    ]
+}
