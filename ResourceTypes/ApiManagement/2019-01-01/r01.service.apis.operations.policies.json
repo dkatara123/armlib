@@ -5,7 +5,7 @@
         "name": {
             "type": "string"
         },
-        "operationPolicies": {
+        "policies": {
             "type": "array",
             "metadata": {
                 "description": "A collection of APIM service-level API policies"
@@ -18,15 +18,15 @@
         {
             "type": "Microsoft.ApiManagement/service/apis/operations/policies",
             "apiVersion": "2019-01-01",
-            "name": "[concat(parameters('name'), '/', parameters('operationPolicies')[copyIndex('operation_policies_copy')].apiName, '/', parameters('operationPolicies')[copyIndex('operation_policies_copy')].operationName, '/', parameters('operationPolicies')[copyIndex('operation_policies_copy')].policyName)]",
+            "name": "[concat(parameters('name'), '/', parameters('policies')[copyIndex('operation_policies_copy')].apiName, '/', parameters('policies')[copyIndex('operation_policies_copy')].operationName, '/', parameters('policies')[copyIndex('operation_policies_copy')].policyName)]",
             "dependsOn": [],
             "properties": {
-                "value": "[parameters('operationPolicies')[copyIndex('operation_policies_copy')].policyValue]",
-                "format": "[parameters('operationPolicies')[copyIndex('operation_policies_copy')].policyValueFormat]"
+                "value": "[parameters('policies')[copyIndex('operation_policies_copy')].policyValue]",
+                "format": "[parameters('policies')[copyIndex('operation_policies_copy')].policyValueFormat]"
             },
             "copy": {
                 "name": "operation_policies_copy",
-                "count": "[length(parameters('operationPolicies'))]"
+                "count": "[length(parameters('policies'))]"
             }
         }
     ]
