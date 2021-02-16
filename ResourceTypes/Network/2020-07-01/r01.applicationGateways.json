@@ -38,6 +38,10 @@
         },
         "pipName": {
             "type": "string"
+        },
+        "healthProbePath": {
+            "type": "string",
+            "defaultValue": "/"
         }     
     },
     "variables": {
@@ -172,7 +176,7 @@
                             ],
                             "interval": 30,
                             "minServers": 0,
-                            "path": "/",
+                            "path": "[parameters('healthProbePath')]",
                             "protocol": "Https",
                             "timeout": 30,
                             "unhealthyThreshold": 3,
