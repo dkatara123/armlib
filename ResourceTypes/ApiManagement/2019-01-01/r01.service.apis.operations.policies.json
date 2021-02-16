@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "operationPolicies": {
+            "type": "array",
+            "metadata": {
+                "description": "A collection of APIM service-level API policies"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations/policies",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('operationPolicies')[copyIndex('operation_policies_copy')].apiName, '/', parameters('operationPolicies')[copyIndex('operation_policies_copy')].operationName, '/', parameters('operationPolicies')[copyIndex('operation_policies_copy')].policyName)]",
+            "dependsOn": [],
+            "properties": {
+                "value": "[parameters('operationPolicies')[copyIndex('operation_policies_copy')].policyValue]",
+                "format": "[parameters('operationPolicies')[copyIndex('operation_policies_copy')].policyValueFormat]"
+            },
+            "copy": {
+                "name": "operation_policies_copy",
+                "count": "[length(parameters('operationPolicies'))]"
+            }
+        }
+    ]
+}
