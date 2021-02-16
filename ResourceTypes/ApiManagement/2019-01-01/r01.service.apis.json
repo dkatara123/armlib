@@ -1,0 +1,40 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "apis": {
+            "type": "array",
+            "metadata": {
+                "description": "A collection of APIM service-level APIs"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/apis",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('apis')[copyIndex('apis_copy')].name)]",
+            "dependsOn": [],
+            "properties": {
+                "format": "[parameters('apis')[copyIndex('apis_copy')].specFormat]",
+                "value": "[parameters('apis')[copyIndex('apis_copy')].specUrl]",
+                "displayName": "[parameters('apis')[copyIndex('apis_copy')].displayName]",
+                "apiRevision": "[parameters('apis')[copyIndex('apis_copy')].apiRevision]",
+                "subscriptionRequired": "[parameters('apis')[copyIndex('apis_copy')].subscriptionRequired]",
+                "serviceUrl": "[parameters('apis')[copyIndex('apis_copy')].serviceUrl]",
+                "path": "[parameters('apis')[copyIndex('apis_copy')].path]",
+                "protocols": "[parameters('apis')[copyIndex('apis_copy')].protocols]",
+                "isCurrent": "[parameters('apis')[copyIndex('apis_copy')].isCurrent]"
+            },
+            "copy": {
+                "name": "apis_copy",
+                "count": "[length(parameters('apis'))]"
+            }
+        }
+    ]
+}
