@@ -18,15 +18,15 @@
         {
             "type": "Microsoft.ApiManagement/service/apis/policies",
             "apiVersion": "2019-01-01",
-            "name": "[concat(parameters('name'), '/',parameters('apisPolicies')[copyIndex('apis_policies_copy')].apiName,'/',parameters('apisPolicies')[copyIndex('apis_policies_copy')].policyName)]",
+            "name": "[concat(parameters('name'), '/',parameters('policies')[copyIndex('apis_policies_copy')].apiName,'/',parameters('policies')[copyIndex('apis_policies_copy')].policyName)]",
             "dependsOn": [],
             "properties": {
-                "value": "[parameters('apisPolicies')[copyIndex('apis_policies_copy')].policyValue]",
-                "format": "[parameters('apisPolicies')[copyIndex('apis_policies_copy')].policyValueFormat]"
+                "value": "[parameters('policies')[copyIndex('apis_policies_copy')].policyValue]",
+                "format": "[parameters('policies')[copyIndex('apis_policies_copy')].policyValueFormat]"
             },
             "copy": {
                 "name": "apis_policies_copy",
-                "count": "[length(parameters('apisPolicies'))]"
+                "count": "[length(parameters('policies'))]"
             }
         }
     ]
