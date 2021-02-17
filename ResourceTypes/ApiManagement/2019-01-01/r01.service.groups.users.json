@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "groups": {
+            "type": "array",
+            "metadata": {
+                "description": "APIM users"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/groups/users",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('groups')[copyIndex('groups_copy')].groupName)]",
+            "dependsOn": [],
+            "properties": {
+                "firstName": "[parameters('groups')[copyIndex('groups_copy')].firstName]",
+                "lastName": "[parameters('groups')[copyIndex('groups_copy')].lastName]",
+                "email": "[parameters('groups')[copyIndex('groups_copy')].email]",
+                "state": "[parameters('groups')[copyIndex('groups_copy')].state]",
+                "note": "[parameters('groups')[copyIndex('groups_copy')].note]",
+                "identities": "[parameters('groups')[copyIndex('groups_copy')].identities]"
+            },
+            "copy": {
+                "name": "groups_copy",
+                "count": "[length(parameters('groups'))]"
+            }
+        }
+    ]
+}
