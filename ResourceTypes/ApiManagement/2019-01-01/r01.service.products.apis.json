@@ -1,0 +1,34 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the APIM instance"
+            }
+        },
+        "products_apis": {
+            "type": "array",
+            "metadata": {
+                "description": "APIM service products APIs"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/products/apis",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('products_apis')[copyIndex('products_apis_copy')].productName, '/', parameters('products_apis')[copyIndex('products_apis_copy')].apiName)]",
+            "dependsOn": [],
+            "properties": {
+            },
+            "copy": {
+                "name": "products_apis_copy",
+                "count": "[length(parameters('products_apis'))]"
+            }
+        }
+    ]
+}
