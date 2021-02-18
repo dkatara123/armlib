@@ -60,24 +60,6 @@
         },
         "publicNetworkAccess": {
             "type": "string"
-        },
-        "integrationRuntimeName": {
-            "type": "string"
-        },
-        "integrationRuntimeComputeLocation": {
-            "type": "string"
-        },
-        "dataFlow_computeType": {
-            "type": "string"
-        },
-        "dataFlow_coreCount": {
-            "type": "int"
-        },
-        "dataFlow_timeToLive": {
-            "type": "int"
-        },
-        "dataFlow_cleanup": {
-            "type": "bool"
         }
     },
     "functions": [
@@ -164,24 +146,6 @@
                 "parameters": {
                     "factoryName": {
                         "value": "[parameters('dataFactoryName')]"
-                    },
-                    "name": {
-                        "value": "[parameters('integrationRuntimeName')]"
-                    },
-                    "computeLocation": {
-                        "value": "[parameters('integrationRuntimeComputeLocation')]"
-                    },
-                    "dataFlow_computeType": {
-                        "value": "[parameters('dataFlow_computeType')]"
-                    },
-                    "dataFlow_coreCount": {
-                        "value": "[parameters('dataFlow_coreCount')]"
-                    },
-                    "dataFlow_timeToLive": {
-                        "value": "[parameters('dataFlow_timeToLive')]"
-                    },
-                    "dataFlow_cleanup": {
-                        "value": "[parameters('dataFlow_cleanup')]"
                     }
                 },
                 "debugSetting": {
