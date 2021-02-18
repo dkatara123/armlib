@@ -18,7 +18,7 @@
         {
             "type": "Microsoft.ApiManagement/service/groups/users",
             "apiVersion": "2019-01-01",
-            "name": "[concat(parameters('name'), '/', parameters('groups')[copyIndex('groups_copy')].groupName)]",
+            "name": "[concat(parameters('name'), '/', parameters('groups')[copyIndex('groups_copy')].groupName, '/', parameters('groups')[copyIndex('groups_copy')].userId)]",
             "dependsOn": [],
             "properties": {
                 "firstName": "[parameters('groups')[copyIndex('groups_copy')].firstName]",
