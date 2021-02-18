@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the APIM instance"
+            }
+        },
+        "backends": {
+            "type": "array",
+            "metadata": {
+                "description": "Collection of APIM service backends"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/backends",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('backends')[copyIndex('backends_copy')].name)]",
+            "dependsOn": [],
+            "properties": {
+                "description": "[parameters('backends')[copyIndex('backends_copy')].description]",
+                "url": "[parameters('backends')[copyIndex('backends_copy')].url]",
+                "protocol": "[parameters('backends')[copyIndex('backends_copy')].protocol]",
+                "resourceId": "[parameters('backends')[copyIndex('backends_copy')].resourceId]",
+                "credentials": "[parameters('backends')[copyIndex('backends_copy')].credentials]"
+            },
+            "copy": {
+                "name": "backends_copy",
+                "count": "[length(parameters('backends'))]"
+            }
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the APIM instance"
+            }
+        },
+        "diagnostics": {
+            "type": "array",
+            "metadata": {
+                "description": "APIM service diagnostics"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/diagnostics",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('diagnostics')[copyIndex('diagnostics_copy')].name)]",
+            "dependsOn": [],
+            "properties": {
+                "alwaysLog": "[parameters('diagnostics')[copyIndex('diagnostics_copy')].alwaysLog]",
+                "enableHttpCorrelationHeaders": "[parameters('diagnostics')[copyIndex('diagnostics_copy')].enableHttpCorrelationHeaders]",
+                "loggerId": "[resourceId('Microsoft.ApiManagement/service/loggers', parameters('name'), parameters('diagnostics')[copyIndex('diagnostics_copy')].loggerName)]",
+                "sampling": {
+                    "samplingType": "[parameters('diagnostics')[copyIndex('diagnostics_copy')].sampling.samplingType]",
+                    "percentage": "[parameters('diagnostics')[copyIndex('diagnostics_copy')].sampling.percentage]"
+                }
+            },
+            "copy": {
+                "name": "diagnostics_copy",
+                "count": "[length(parameters('diagnostics'))]"
+            }
+        }
+    ]
+}
