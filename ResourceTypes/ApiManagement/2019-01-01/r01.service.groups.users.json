@@ -21,12 +21,6 @@
             "name": "[concat(parameters('name'), '/', parameters('groups')[copyIndex('groups_copy')].groupName, '/', parameters('groups')[copyIndex('groups_copy')].userId)]",
             "dependsOn": [],
             "properties": {
-                "firstName": "[parameters('groups')[copyIndex('groups_copy')].firstName]",
-                "lastName": "[parameters('groups')[copyIndex('groups_copy')].lastName]",
-                "email": "[parameters('groups')[copyIndex('groups_copy')].email]",
-                "state": "[parameters('groups')[copyIndex('groups_copy')].state]",
-                "note": "[parameters('groups')[copyIndex('groups_copy')].note]",
-                "identities": "[parameters('groups')[copyIndex('groups_copy')].identities]"
             },
             "copy": {
                 "name": "groups_copy",

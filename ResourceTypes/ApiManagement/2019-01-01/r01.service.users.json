@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "users": {
+            "type": "array",
+            "metadata": {
+                "description": "APIM users"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/users",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('users')[copyIndex('users_copy')].userId)]",
+            "dependsOn": [],
+            "properties": {
+                "firstName": "[parameters('users')[copyIndex('users_copy')].firstName]",
+                "lastName": "[parameters('users')[copyIndex('users_copy')].lastName]",
+                "email": "[parameters('users')[copyIndex('users_copy')].email]",
+                "state": "[parameters('users')[copyIndex('users_copy')].state]",
+                "note": "[parameters('users')[copyIndex('users_copy')].note]",
+                "identities": "[parameters('users')[copyIndex('users_copy')].identities]"
+            },
+            "copy": {
+                "name": "users_copy",
+                "count": "[length(parameters('users'))]"
+            }
+        }
+    ]
+}
