@@ -1,0 +1,82 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": {
+                "description": "Data factory Name."
+            }
+        },
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of Integration Runtimes"
+            },
+            "defaultValue": "AutoResolveIntegrationRuntime"
+        },
+        "computeLocation": {
+            "type": "string",
+            "metadata": {
+                "description": ""
+            },
+            "defaultValue": "AutoResolve"
+        },
+        "dataFlow_computeType": {
+            "type": "string",
+            "metadata": {
+                "description": ""
+            },
+            "defaultValue": "General"
+        },
+        "dataFlow_coreCount": {
+            "type": "int",
+            "metadata": {
+                "description": ""
+            },
+            "defaultValue": 8
+        },
+        "dataFlow_timeToLive": {
+            "type": "int",
+            "metadata": {
+                "description": ""
+            },
+            "defaultValue": 0
+        },
+        "dataFlow_cleanup": {
+            "type": "bool",
+            "metadata": {
+                "description": ""
+            },
+            "defaultValue": true
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/', parameters('name'))]",
+            "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "Managed",
+                "typeProperties": {
+                    "computeProperties": {
+                        "location": "[parameters('computeLocation')]",
+                        "dataFlowProperties": {
+                            "computeType": "[parameters('dataFlow_computeType')]",
+                            "coreCount": "[parameters('dataFlow_coreCount')]",
+                            "timeToLive": "[parameters('dataFlow_timeToLive')]",
+                            "cleanup": "[parameters('dataFlow_cleanup')]"
+                        }
+                    }
+                },
+                "managedVirtualNetwork": {
+                    "type": "ManagedVirtualNetworkReference",
+                    "referenceName": "default"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

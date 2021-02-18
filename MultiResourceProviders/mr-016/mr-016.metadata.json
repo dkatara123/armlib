@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-016",
+  "displayName": "Azure Data Factory with Private Endpoint, Default Azure IR (AutoResolveIntegrationRuntime) with ManagedVnet and 'Get' Secret access on Key Vault.",
+  "description": ""
+}

@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "indexNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": ""
+        },
+        "dataFactoryName": {
+            "value": ""
+        },
+        "virtualNetworkResourceGroupName": {
+            "value": ""
+        },
+        "virtualNetworkName": {
+            "value": ""
+        },
+        "subnetName": {
+            "value": ""
+        },
+        "privateEndpointServices": {
+            "value": []
+        },
+        "sendDiagnosticsToWorkspace": {
+            "value": false
+        },
+        "workspaceName": {
+            "value": ""
+        },
+        "workspaceResourceGroup": {
+            "value": ""
+        },
+        "keyVaultName": {
+            "value": ""
+        },
+        "keyVaultResourceGroup": {
+            "value": ""
+        },
+        "publicNetworkAccess": {
+            "value": ""
+        },
+        "integrationRuntimeName": {
+            "value": ""
+        },
+        "integrationRuntimeComputeLocation": {
+            "value": ""
+        },
+        "dataFlow_computeType": {
+            "value": ""
+        },
+        "dataFlow_coreCount": {
+            "value": 0
+        },
+        "dataFlow_timeToLive": {
+            "value": 0
+        },
+        "dataFlow_cleanup": {
+            "value": false
+        }
+    }
+}
