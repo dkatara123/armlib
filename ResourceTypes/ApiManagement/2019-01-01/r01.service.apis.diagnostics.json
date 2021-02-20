@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the APIM instance"
+            }
+        },
+        "api_diagnostics": {
+            "type": "array",
+            "metadata": {
+                "description": "APIM service API diagnostics"
+            },
+            "defaultValue": []
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/apis/diagnostics",
+            "apiVersion": "2019-01-01",
+            "name": "[concat(parameters('name'), '/', parameters('api_diagnostics')[copyIndex('diagnostics_copy')].apiName, '/',parameters('api_diagnostics')[copyIndex('diagnostics_copy')].diagnosticsName)]",
+            "dependsOn": [],
+            "properties": {
+                "alwaysLog": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].alwaysLog]",
+                "enableHttpCorrelationHeaders": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].enableHttpCorrelationHeaders]",
+                "loggerId": "[resourceId('Microsoft.ApiManagement/service/loggers', parameters('name'), parameters('api_diagnostics')[copyIndex('diagnostics_copy')].loggerName)]",
+                "sampling": {
+                    "samplingType": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].sampling.samplingType]",
+                    "percentage": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].sampling.percentage]"
+                },
+                "frontend": {
+                    "request": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].frontend.request]",
+                    "response": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].frontend.response]"
+                },
+                "backend": {
+                    "request": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].backend.request]",
+                    "response": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].backend.response]"
+                },
+                "verbosity": "[parameters('api_diagnostics')[copyIndex('diagnostics_copy')].verbosity]"
+            },
+            "copy": {
+                "name": "diagnostics_copy",
+                "count": "[length(parameters('api_diagnostics'))]"
+            }
+        }
+    ]
+}
