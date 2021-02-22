@@ -12,3 +12,4 @@
 10. Service Bus - namespace
 11. Data Factory - dataFactory
 12. Data Factory - portal
+13. Key Vault - vault

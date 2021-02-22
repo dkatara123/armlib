@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": {
+                "description": "Data factory Name."
+            }
+        },
+        "privateLinkResourceName": {
+            "type": "string"
+        },
+        "privateLinkResourceId": {
+            "type": "string"
+        },
+        "groupId": {
+            "type": "string",
+            "allowedValues": [
+                "blob",
+                "file",
+                "table",
+                "dfs",
+                "MongoDB",
+                "sqlServer",
+                "vault"
+            ]
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'),'/default/',parameters('privateLinkResourceName'))]",
+            "type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "privateLinkResourceId": "[parameters('privateLinkResourceId')]",
+                "groupId": "[parameters('groupId')]"
+            }
+        }
+    ],
+    "outputs": {}
+}
