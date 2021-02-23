@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-017",
+  "displayName": "Functions app with incremental app settings",
+  "description": ""
+}
