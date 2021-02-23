@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "appSettings": {
+            "type": "object",
+            "metadata": {
+                "description": "The collection of application settings"
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-08-01",
+            "name": "[concat(parameters('name'), '/appSettings')]",
+            "type": "Microsoft.Web/sites/config",
+            "location": "[parameters('location')]",
+            "properties": "[parameters('appSettings')]"
+        }
+    ]
+}
