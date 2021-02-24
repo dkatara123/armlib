@@ -47,7 +47,7 @@
                         "value": "[parameters('functionAppName')]"
                     },
                     "appSettings": {
-                        "value": "[list(format('{0}/config/appsettings', resourceId('Microsoft.Web/sites', parameters('functionAppName'))), '2020-06-01').properties]"
+                        "value": "[union(list(format('{0}/config/appsettings', resourceId('Microsoft.Web/sites', parameters('functionAppName'))), '2020-06-01').properties, parameters('appSettings'))]"
                     }
                 },
                 "debugSetting": {
