@@ -149,6 +149,12 @@
                     },
                     "enablePartitioning": {
                         "value": "[parameters('topics')[copyIndex()].enablePartitioning]"
+                    },
+                    "supportOrdering": {
+                        "value": "[parameters('topics')[copyIndex()].supportOrdering]"
+                    },
+                    "requiresDuplicateDetection": {
+                        "value": "[parameters('topics')[copyIndex()].requiresDuplicateDetection]"
                     }
                 }
             }
