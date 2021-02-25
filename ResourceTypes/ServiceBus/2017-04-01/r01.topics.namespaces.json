@@ -17,9 +17,23 @@
         "enablePartitioning": {
             "type": "bool",
             "metadata": {
-                "description": "Optional.Value that indicates whether the topic to be partitioned across multiple message brokers is enabled. Note - partitioning entities are not supported"
+                "description": "Optional value that indicates whether the topic to be partitioned across multiple message brokers is enabled. Note - partitioning entities are not supported"
             },
             "defaultValue": true
+        },
+        "supportOrdering": {
+            "type": "bool",
+            "metadata": {
+                "description": "Optional value that indicates whether the topic supports ordering."
+            },
+            "defaultValue": false
+        },
+        "requiresDuplicateDetection": {
+            "type": "bool",
+            "metadata": {
+                "description": "Optional value indicating if this topic requires duplicate detection."
+            },
+            "defaultValue": false
         }
     },
     "functions": [
@@ -32,7 +46,9 @@
             "type": "Microsoft.ServiceBus/namespaces/topics",
             "apiVersion": "2017-04-01",
             "properties": {
-                "enablePartitioning": "[parameters('enablePartitioning')]"
+                "enablePartitioning": "[parameters('enablePartitioning')]",
+                "supportOrdering": "[parameters('supportOrdering')]",
+                "requiresDuplicateDetection": "[parameters('requiresDuplicateDetection')]"
             },
             "resources": [
             ]
