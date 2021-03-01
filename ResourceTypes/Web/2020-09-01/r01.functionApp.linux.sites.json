@@ -85,21 +85,7 @@
             "metadata": {
                 "description": "description"
             }
-        },
-        "principalId": {
-            "type": "string",
-            "metadata": {
-                "description": "The principal ID assigned to the role. This maps to the ID inside the Active Directory. It can point to a user, service principal, or security group."
-            }
-        },
-        "tenantId": {
-            "type": "string",
-            "metadata": {
-                "description": "The Azure Active Directory tenant ID that should be used for authenticating requests . - globally unique identifier"
-            },
-            "defaultValue": "[subscription().tenantId]"
         }
-
     },
     "resources": [
         {
@@ -113,8 +99,8 @@
             "dependsOn": [
             ],
             "identity": {	
-                "principalId": "[parameters('principalId')]",	
-                "tenantId": "[parameters('tenantId')]",	
+                "principalId": "",	
+                "tenantId": "",	
                 "type": "SystemAssigned"	
             },
             "properties": {

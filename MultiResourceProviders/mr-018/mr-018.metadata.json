@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-005",
+  "displayName": "Linux Function App with VNet Integration and Private Endpoints.",
+  "description": ""
+}
