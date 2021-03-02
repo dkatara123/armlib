@@ -43,7 +43,24 @@
                 "enableBatchedOperations": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].enableBatchedOperations]",
                 "autoDeleteOnIdle": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].autoDeleteOnIdle]",
                 "forwardTo": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].forwardTo]",
-                "forwardDeadLetteredMessagesTo": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].forwardDeadLetteredMessagesTo]"          
+                "forwardDeadLetteredMessagesTo": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].forwardDeadLetteredMessagesTo]",
+                "resources": [
+                    {
+                        "apiVersion": "2017-04-01",
+                        "name": "$Default",
+                        "type": "Rules",
+                        "dependsOn": [
+                            "[concat(parameters('namespace'), '/', parameters('topicName'), '/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]"
+                        ],
+                        "properties": {
+                            "filterType": "SqlFilter",
+                            "sqlFilter": {
+                                "sqlExpression": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].filterExpression]",
+                                "requiresPreprocessing": false
+                            }
+                        }
+                    }
+                ]        
             },
             "copy": {
                 "name": "subscriptions_copy",
