@@ -48,7 +48,7 @@
             "resources": [
                 {
                     "apiVersion": "2017-04-01",
-                    "name": "$Default",
+                    "name": "Default",
                     "type": "rules",
                     "dependsOn": [
                         "[concat('Microsoft.ServiceBus/namespaces/', parameters('namespace'), '/topics/', parameters('topicName'), '/subscriptions/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]"
