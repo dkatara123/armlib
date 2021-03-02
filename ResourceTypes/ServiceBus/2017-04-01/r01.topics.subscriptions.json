@@ -51,7 +51,7 @@
                     "name": "$Default",
                     "type": "rules",
                     "dependsOn": [
-                        "[concat('Microsoft.ServiceBus/', parameters('namespace'), '/', parameters('topicName'), '/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]"
+                        "[concat(parameters('namespace'), '/', parameters('topicName'), '/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]"
                     ],
                     "properties": {
                         "filterType": "SqlFilter",
