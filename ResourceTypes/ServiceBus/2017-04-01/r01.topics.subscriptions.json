@@ -48,9 +48,9 @@
                     {
                         "apiVersion": "2017-04-01",
                         "name": "TestRule",
-                        "type": "Rules",
+                        "type": "rules",
                         "dependsOn": [
-                            "[concat(parameters('namespace'), '/', parameters('topicName'), '/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]"
+                            "[concat('Microsoft.ServiceBus/', parameters('namespace'), '/', parameters('topicName'), '/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]"
                         ],
                         "properties": {
                             "filterType": "SqlFilter",
