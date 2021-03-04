@@ -1,6 +1,6 @@
 {
   "type": "MultiResourceProviders",
-  "Id": "mr-005",
+  "Id": "mr-018",
   "displayName": "Linux Function App with VNet Integration and Private Endpoints.",
-  "description": ""
+  "description": "System assigned identity enabled,  "
 }

@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-019",
+  "displayName": "Windows WebApp with VNet Integration and Private Endpoints.",
+  "description": "Syetem assigned identity enabled "
+}

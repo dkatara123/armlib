@@ -1,0 +1,267 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "serverFarmResourceGroup": {
+            "type": "string"
+        },
+        "ipSecurityRestrictions": {
+            "type": "array"
+        },
+        "vnetIntegrationVnetResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "vnetIntegrationVnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "vnetIntegrationSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateEndpointVnetResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateEndpointVnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateEndpointSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateEndpointServices": {
+            "type": "string"
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        },
+        "applicationInsightsName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "applicationInsightsResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "webAppName": {
+            "type": "string"
+        },
+        "serverFarmName": {
+            "type": "string"
+        },
+        "alwaysOn": {
+            "type": "bool"
+        },
+        "kind": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. Kind of resource."
+            },
+            "allowedValues": [
+                "app"
+            ]
+        },
+        "appCommandLine": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "privateEndpointVnetResourceId": "[resourceId(parameters('privateEndpointVnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('privateEndpointVnetName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('uniqueString'),'-sr-02.sites.web-',parameters('indexNo'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "properties": {
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/SingleResourceProviders/WebApps/sr-02.sites.web.json',parameters('_artifactsStorageSASToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "uniqueString": {
+                        "value": "[parameters('uniqueString')]"
+                    },
+                    "_artifactsStorageSASToken": {
+                        "value": "[parameters('_artifactsStorageSASToken')]"
+                    },
+                    "_artifactsStorageContainerUrl": {
+                        "value": "[parameters('_artifactsStorageContainerUrl')]"
+                    },
+                    "webAppName": {
+                        "value": "[parameters('webAppName')]"
+                    },
+                    "serverFarmName": {
+                        "value": "[parameters('serverFarmName')]"
+                    },
+                    "serverFarmResourceGroup": {
+                        "value": "[parameters('serverFarmResourceGroup')]"
+                    },
+                    "alwaysOn": {
+                        "value": "[parameters('alwaysOn')]"
+                    },
+                    "ipSecurityRestrictions": {
+                        "value": "[parameters('ipSecurityRestrictions')]"
+                    },
+                    "kind": {
+                        "value": "[parameters('kind')]"
+                    },
+                    "appCommandLine": {
+                        "value": "[parameters('appCommandLine')]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
+                    },
+                    "applicationInsightsName": {
+                        "value": "[parameters('applicationInsightsName')]"
+                    },
+                    "applicationInsightsResourceGroup": {
+                        "value": "[parameters('applicationInsightsResourceGroup')]"
+                    },
+                    "vnetIntegrationVnetResourceGroup": {
+                        "value": "[parameters('vnetIntegrationVnetResourceGroup')]"
+                    },
+                    "vnetIntegrationVnetName": {
+                        "value": "[parameters('vnetIntegrationVnetName')]"
+                    },
+                    "vnetIntegrationSubnetName": {
+                        "value": "[parameters('vnetIntegrationSubnetName')]"
+                    }
+                },
+                "mode": "Incremental",
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-sr-02.sites.web-',parameters('indexNo'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('webAppName'),'-pep')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2020-04-01/r01.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[concat('pep-',parameters('webAppName'),'-',parameters('privateEndpointServices'))]"
+                    },
+                    "virtualNetworkId": {
+                        "value": "[variables('privateEndpointVnetResourceId')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('privateEndpointSubnetName')]"
+                    },
+                    "privateLinkServiceId": {
+                        "value": "[resourceId('Microsoft.Web/sites',parameters('webAppName'))]"
+                    },
+                    "groupIds": {
+                        "value": [
+                            "[parameters('privateEndpointServices')]"
+                        ]
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('webAppName'),'-pep')]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('webAppName'),'-dnszones')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2020-04-01/r01.privateDnsZoneGroups.privateEndpoints.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "privateEndpointName": {
+                        "value": "[concat('pep-',parameters('webAppName'),'-',parameters('privateEndpointServices'))]"
+                    },
+                    "virtualNetworkResourceGroupName": {
+                        "value": "[parameters('privateEndpointVnetResourceGroup')]"
+                    },
+                    "privateDnsZone": {
+                        "value": "[parameters('privateEndpointServices')]"
+                    }
+                },
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

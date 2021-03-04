@@ -17,19 +17,8 @@
         "serverFarmResourceGroup": {
             "value": ""
         },
-        "storageAccountResourceGroup": {
-            "value": ""
-        },
-        "storageAccountName": {
-            "value": ""
-        },
-        "linuxFxVersion": {
-            "value": ""
-        },
         "ipSecurityRestrictions": {
-            "value": [
-               
-            ]
+            "value": []
         },
         "vnetIntegrationVnetResourceGroup": {
             "value": ""
@@ -76,19 +65,8 @@
         "kind": {
             "value": ""
         },
-        "userManagedIdentityName": {
-            "value": ""
-        },
-        "mountPaths": {
-            "value": [
-               
-            ]
-        },
-        "hasMountPaths": {
-            "value": false
-        },
         "appCommandLine": {
             "value": ""
-       }
-   }
+        }
+    }
 }

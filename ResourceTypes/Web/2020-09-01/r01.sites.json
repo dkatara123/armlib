@@ -86,7 +86,7 @@ Deploys Linux WebApps.
     },
     "resources": [
         {
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2020-09-01",
             "name": "[parameters('name')]",
             "type": "Microsoft.Web/sites",
             "location": "[parameters('location')]",

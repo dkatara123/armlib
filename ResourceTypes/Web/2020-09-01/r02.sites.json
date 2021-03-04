@@ -1,19 +1,3 @@
-/*
-# Template Name
-t001.sites.json
-
-# Summary
-Deploys Linux WebApps.
-
-# Descriptiom
-
-# Required Parameters
-
-# Fixed Settings 
-1. clientAffinityEnabled: false
-
-# Notes
-*/
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
@@ -34,9 +18,6 @@ Deploys Linux WebApps.
         "alwaysOn": {
             "type": "bool"
         },
-        "linuxFxVersion": {
-            "type": "string"
-        },
         "ipSecurityRestrictions": {
             "type": "array"
         },
@@ -46,8 +27,12 @@ Deploys Linux WebApps.
                 "description": "Required. Kind of resource."
             },
             "allowedValues": [
-                "app,linux"
+                "app"
             ]
+        },
+        "currentStack": {
+            "type": "string",
+            "defaultValue": "dotnetcore"
         },
         "appCommandLine": {
             "type": "string",
@@ -86,7 +71,7 @@ Deploys Linux WebApps.
     },
     "resources": [
         {
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2020-09-01",
             "name": "[parameters('name')]",
             "type": "Microsoft.Web/sites",
             "location": "[parameters('location')]",
@@ -96,15 +81,18 @@ Deploys Linux WebApps.
                 "tenantId": "",	
                 "type": "SystemAssigned"	
             },
-            "tags": {
-            },
             "properties": {
                 "name": "[parameters('name')]",
                 "siteConfig": {
-                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
                     "alwaysOn": "[parameters('alwaysOn')]",
                     "http20Enabled": false,
                     "minTlsVersion": "1.2",
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "[parameters('currentStack')]"
+                        }
+                    ],
                     "copy": [
                         {
                             "name": "ipSecurityRestrictions",
@@ -136,48 +124,29 @@ Deploys Linux WebApps.
                         },
                         {
                             "name": "XDT_MicrosoftApplicationInsights_Mode",
-                            "value": "recommended"
+                            "value": "default"
                         },
                         {
-                            "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
-                            "value": "1.0.0"
+                            "name": "SCM_COMMAND_IDLE_TIMEOUT",
+                            "value": "1800"
                         },
                         {
-                            "name": "DiagnosticServices_EXTENSION_VERSION",
-                            "value": "~3"
+                            "name": "WEBSITE_DNS_SERVER",
+                            "value": "168.63.129.16"
                         },
                         {
-                            "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
-                            "value": "1.0.0"
-                        },
-                        {
-                            "name": "SnapshotDebugger_EXTENSION_VERSION",
-                            "value": "disabled"
-                        },
-                        {
-                            "name": "InstrumentationEngine_EXTENSION_VERSION",
-                            "value": "disabled"
-                        },
-                        {
-                            "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
-                            "value": "disabled"
-                        },
-                        {
-                            "name": "XDT_MicrosoftApplicationInsights_PreemptSdk",
-                            "value": "disabled"
+                            "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+                            "value": "90"
                         },
                         {
                             "name": "WEBSITE_VNET_ROUTE_ALL",
                             "value": "1"
-                        },
-                        {
-                            "name": "JAVA_OPTS",
-                            "value": "-Xms1024m -Xmx2048m"
                         }
                     ]
                 },
                 "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'),'Microsoft.Web/serverfarms',parameters('hostingPlanName'))]",
-                "httpsOnly": true
+                "httpsOnly": true,
+                "clientAffinityEnabled": true
             },
             "resources": [
                 {
