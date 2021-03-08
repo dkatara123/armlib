@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-015",
+  "displayName": "General storage v2 account with multi containers, fileShares, private endpoints and upload primary connection string to keyvault and assign container role.",
+  "description": ""
+}
