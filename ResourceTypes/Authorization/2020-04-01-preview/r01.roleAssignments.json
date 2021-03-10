@@ -4,7 +4,6 @@
     "parameters": {
         "objectid": {
             "type": "string",
-            "defaultValue": "7a2de3b1-2983-44b7-8f6e-6ff7d48ba30a",
             "metadata": {
                 "description": "The object to assign the role to"
             }
@@ -16,28 +15,18 @@
                 "description": "A new GUID used to identify the role assignment"
             }
         },
-        "location": {
-            "metadata": {
-                "descrption": "Resource location."
-            },
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]"
-        },
-        "storageName": {
+        "scope": {
             "type": "string"
         }
-    },
-    "variables": {
-        "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
     },
     "resources": [
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
             "name": "[parameters('roleNameGuid')]",
-            "scope": "[concat('Microsoft.Storage/storageAccounts', '/', parameters('storageName'))]",
+            "scope": "[parameters('scope')]",
             "properties": {
-                "roleDefinitionId": "[variables('Contributor')]",
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
                 "principalId": "[parameters('objectid')]"
             }
         }
