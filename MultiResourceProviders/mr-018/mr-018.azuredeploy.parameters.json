@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "indexNo": {
+            "value": 0
+        },
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": ""
+        },
+        "VMname": {
+            "value": ""
+        },
+        "location": {
+            "value": ""
+        },
+        "vmSize": {
+            "value": ""
+        },
+        "DataFactoryVersion": {
+            "value": ""
+        },
+        "datafactoryId": {
+            "value": ""
+        },
+        "scriptUrl": {
+            "value": ""
+        },
+        "adminusername": {
+            "value": ""
+        },
+        "adminpassword": {
+            "value": ""
+        },
+        "vnetName": {
+            "value": ""
+        },
+        "subnetName": {
+            "value": ""
+        },
+        "vnet_resourceGroup": {
+            "value": ""
+        },
+        "imagegalleryname": {
+            "value": ""
+        },
+        "galleryImageDefinitionName": {
+            "value": ""
+        },
+        "galleryImageVersionName": {
+            "value": ""
+        },
+        "DomainName": {
+            "value": ""
+        },
+        "domainUsername": {
+            "value": ""
+        },
+        "domainPassword": {
+            "value": ""
+        },
+        "ouPath": {
+            "value": ""
+        }
+    }
+}

@@ -1,0 +1,267 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "indexNo": {
+            "type": "int",
+            "metadata": {
+                "description": "Deployment index number. Index number is required to give unique name to deployment when multiple deployments are executed to avoid deployment overwrite."
+            },
+            "defaultValue": 0
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "VMname": {
+            "type": "String"
+        },
+        "location": {
+            "type": "String"
+        },
+        "vmSize": {
+            "type": "string"
+        },
+        "DataFactoryVersion": {
+            "type": "string"
+        },
+        "datafactoryId": {
+            "type": "string"
+        },
+        "scriptUrl": {
+            "type": "string"
+        },
+        "adminusername": {
+            "type": "String"
+        },
+        "adminpassword": {
+            "type": "SecureString"
+        },
+        "vnetName": {
+            "type": "String"
+        },
+        "subnetName": {
+            "type": "String"
+        },
+        "vnet_resourceGroup": {
+            "type": "string"
+        },
+        "imagegalleryname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Shared Image Gallery."
+            }
+        },
+        "galleryImageDefinitionName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Image Definition."
+            }
+        },
+        "galleryImageVersionName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Image Version - should follow <MajorVersion>.<MinorVersion>.<Patch>."
+            }
+        },
+        "DomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "The FQDN of the AD domain"
+            }
+        },
+        "domainUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Username of the account on the domain"
+            }
+        },
+        "domainPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password of the account on the domain"
+            }
+        },
+        "ouPath": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Specifies an organizational unit (OU) for the domain account. Enter the full distinguished name of the OU in quotation marks. Example: \"OU=testOU; DC=domain; DC=Domain; DC=com\""
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "subscriptionId": "[subscription().subscriptionid]",
+        "vnetID": "[resourceId(variables('subscriptionid'),parameters('vnet_resourceGroup'),'Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
+        "subnetRef": "[concat(variables('vnetID'), '/subnets/', parameters('subnetName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-r01.vmcreation-',parameters('indexNo'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/VirtualMachine/r01.vmcreation.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "VMname": {
+                        "value": "[parameters('VMname')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "vmSize": {
+                        "value": "[parameters('vmSize')]"
+                    },
+                    "adminusername": {
+                        "value": "[parameters('adminusername')]"
+                    },
+                    "adminpassword": {
+                        "value": "[parameters('adminpassword')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "vnet_resourceGroup": {
+                        "value": "[parameters('vnet_resourceGroup')]"
+                    },
+                    "imagegalleryname": {
+                        "value": "[parameters('imagegalleryname')]"
+                    },
+                    "galleryImageDefinitionName": {
+                        "value": "[parameters('galleryImageDefinitionName')]"
+                    },
+                    "galleryImageVersionName": {
+                        "value": "[parameters('galleryImageVersionName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-r01.vmcreation-',parameters('indexNo'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-r01.vmcreation.Network-',parameters('indexNo'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/VirtualMachine/r01.vmcreation.Network.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "VMname": {
+                        "value": "[parameters('VMname')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "vnet_resourceGroup": {
+                        "value": "[parameters('vnet_resourceGroup')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-r01.vmcreation.Network-',parameters('indexNo'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-r01.vmcreation.domain-',parameters('indexNo'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/VirtualMachine/r01.vmcreation.domain.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "VMname": {
+                        "value": "[parameters('VMname')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "DomainName": {
+                        "value": "[parameters('DomainName')]"
+                    },
+                    "domainUsername": {
+                        "value": "[parameters('domainUsername')]"
+                    },
+                    "domainPassword": {
+                        "value": "[parameters('domainPassword')]"
+                    },
+                    "ouPath": {
+                        "value": "[parameters('ouPath')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-r01.vmcreation.domain-',parameters('indexNo'))]"
+            ],
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-r01.vmcreation.installGW-',parameters('indexNo'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/VirtualMachine/r01.vmcreation.installGW.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {                    
+                    "VMname": {
+                        "value": "[variables('VMname')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "DataFactoryVersion": {
+                        "value": "[parameters('DataFactoryVersion')]"
+                    },
+                    "datafactoryId": {
+                        "value": "[parameters('datafactoryId')]"
+                    },
+                    "scriptUrl": {
+                        "value": "[parameters('scriptUrl')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

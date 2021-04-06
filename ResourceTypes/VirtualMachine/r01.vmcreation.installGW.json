@@ -1,0 +1,52 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VMname": {
+            "type": "String"
+        },
+        "location": {
+            "type": "String"
+        },
+        "DataFactoryVersion": {
+            "type": "string"
+        },
+        "datafactoryId": {
+            "type": "string"
+        },
+        "scriptUrl": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "subscriptionId": "[subscription().subscriptionid]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VMname'), '/' ,parameters('VMname'), 'installGW')]",
+            "apiVersion": "2019-07-01",
+            "location": "[parameters('location')]",
+            "tags": {
+                "vmname": "[parameters('VMname')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('VMname'))]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.7",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[parameters('scriptURL')]"
+                    ]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File Install-integrationruntime.ps1 ', if(equals(parameters('DataFactoryVersion'), 'V2'), listAuthKeys(parameters('datafactoryId'), '2017-09-01-preview').authKey1, listAuthKeys(parameters('datafactoryId'), '2015-10-01').key1))]"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-018",
+  "displayName": "Azure Virtual Machine creation, domian, networkInterfaces, SHIR",
+  "description": ""
+}
