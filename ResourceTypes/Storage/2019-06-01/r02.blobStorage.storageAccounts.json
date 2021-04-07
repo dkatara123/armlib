@@ -1,0 +1,121 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the storage account within the specified resource group. Storage account names must be between 3 and 24 characters in length and use numbers and lower-case letters only."
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Sku Name. Supported values - Standard_LRS, Standard_GRS, Standard_RAGRS, Standard_ZRS, Premium_LRS, Premium_ZRS, Standard_GZRS, Standard_RAGZRS. Default value is Standard_LRS."
+            },
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Standard_ZRS",
+                "Premium_LRS",
+                "Premium_ZRS",
+                "Standard_GZRS",
+                "Standard_RAGZRS"
+            ],
+            "defaultValue": "Standard_LRS"
+        },
+        "skuTier": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Sku Tier. Supported values - Standard or Premium. Default value is Standard."
+            },
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "defaultValue": "Standard"
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "createIdentity": {
+            "type": "bool",
+            "metadata": {
+                "description": "Optional. The identity of the resource. Accepts only boolean input. To create an identity alongwith resource pass value as 'true'. Default value is false."
+            },
+            "defaultValue": false
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "virtualNetworkResourceGroupName":{
+            "type": "string"
+        },
+        "accessTier": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Required for storage accounts where kind = BlobStorage. The access tier used for billing. - Hot or Cool. Default value is Hot."
+            },
+            "allowedValues": [
+                "Hot",
+                "Cool"
+            ],
+            "defaultValue": "Hot"
+        },
+        "tags": {
+            "type": "object",
+            "metadata": {
+                "description": "Optional. A maximum of 15 tags can be provided for a resource. Each tag must have a key with a length no greater than 128 characters and a value with a length no greater than 256 characters."
+            },
+            "defaultValue": {
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "subnetId": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('name')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]"
+            },
+            "kind": "BlobStorage",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "identity": "[if(parameters('createIdentity'), json('{\"type\":\"SystemAssigned\"}'), json('null'))]",
+            "properties": {
+                "networkAcls":{
+                    "virtualNetworkRules":[
+                        {
+                            "id": "[variables('subnetId')",
+                            "action": "Allow"
+                        }
+                    ],
+                    "defaultAction":"Deny",
+                    "bypass":"None"
+
+                },
+                "accessTier": "[parameters('accessTier')]",
+                "supportsHttpsTrafficOnly": true
+            },
+            "resources": [
+            ]
+        }
+    ],
+    "outputs": {
+    }
+}
