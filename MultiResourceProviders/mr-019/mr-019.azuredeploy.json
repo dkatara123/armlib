@@ -60,6 +60,13 @@
             "metadata": {
                 "description": "description"
             }
+        },
+        "storagetype": { 
+            "type": "string",
+            "allowedValues": [
+                "internal",
+                "external"
+            ]
         }
     },
     "functions": [
@@ -93,6 +100,9 @@
                     },
                     "virtualNetworkResourceGroupName":{
                         "value": "[parameters('virtualNetworkResourceGroupName')]"
+                    },
+                    "storagetype": {
+                        "value": "[parameters('storagetype')]"
                     }
                 },
                 "debugSetting": {

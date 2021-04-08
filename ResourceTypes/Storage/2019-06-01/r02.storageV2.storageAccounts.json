@@ -49,7 +49,7 @@
         "subnetName": {
             "type": "string"
         },
-        "virtualNetworkResourceGroupName":{
+        "virtualNetworkResourceGroupName": {
             "type": "string"
         },
         "createIdentity": {
@@ -75,17 +75,23 @@
             "metadata": {
                 "description": "Optional. A maximum of 15 tags can be provided for a resource. Each tag must have a key with a length no greater than 128 characters and a value with a length no greater than 256 characters."
             },
-            "defaultValue": {
-            }
+            "defaultValue": {}
+        },
+        "storagetype": {
+            "type": "string",
+            "allowedValues": [
+                "internal",
+                "external"
+            ]
         }
     },
-    "functions": [
-    ],
+    "functions": [],
     "variables": {
         "subnetId": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
     },
     "resources": [
         {
+            "condition": "[equals(parameters('storagetype'),'internal')]",
             "name": "[parameters('name')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2019-06-01",
@@ -97,24 +103,40 @@
             "location": "[parameters('location')]",
             "tags": "[parameters('tags')]",
             "identity": "[if(parameters('createIdentity'), json('{\"type\":\"SystemAssigned\"}'), json('null'))]",
-
             "properties": {
-                "networkAcls":{
-                    "virtualNetworkRules":[
+                "networkAcls": {
+                    "virtualNetworkRules": [
                         {
                             "id": "[variables('subnetId')",
                             "action": "Allow"
                         }
                     ],
-                    "defaultAction":"Deny",
-                    "bypass":"None"
-
+                    "defaultAction": "Deny",
+                    "bypass": "None"
                 },
                 "accessTier": "[parameters('accessTier')]",
                 "supportsHttpsTrafficOnly": true
             },
-            "resources": [
-            ]
+            "resources": []
+        },
+        {
+            "condition": "[equals(parameters('storagetype'),'external')]",
+            "name": "[parameters('name')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]"
+            },
+            "kind": "StorageV2",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "identity": "[if(parameters('createIdentity'), json('{\"type\":\"SystemAssigned\"}'), json('null'))]",
+            "properties": {
+                "accessTier": "[parameters('accessTier')]",
+                "supportsHttpsTrafficOnly": true
+            },
+            "resources": []
         }
     ],
     "outputs": {
