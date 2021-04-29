@@ -136,7 +136,7 @@ process {
                 -Blob $filePath.Substring((Split-Path($LiteralPath)).length + 1) `
                 -Container $Container `
                 -Context $storageObj.Context `
-                --Properties @{"ContentType" = "application/json" } `
+                -Properties @{"ContentType" = "application/json" } `
                 -Force -AsJob
         }
         else {
