@@ -131,8 +131,19 @@ process {
 
     "`nPublish files to storage account."
     foreach ($filePath in $filePaths) {
-        Set-AzStorageBlobContent -File $filePath -Blob $filePath.Substring((Split-Path($LiteralPath)).length + 1) `
-            -Container $Container -Context $storageObj.Context -Force -AsJob | Format-Table
+        if ($filePath -match '.json') {
+            Set-AzStorageBlobContent -File $filePath `
+                -Blob $filePath.Substring((Split-Path($LiteralPath)).length + 1) `
+                -Container $Container `
+                -Context $storageObj.Context `
+                --Properties @{"ContentType" = "application/json" } `
+                -Force -AsJob
+        }
+        else {
+            Set-AzStorageBlobContent -File $filePath -Blob $filePath.Substring((Split-Path($LiteralPath)).length + 1) `
+                -Container $Container -Context $storageObj.Context -Force -AsJob
+        }
+
     }
 
     Get-Job | Wait-Job | Select-Object Id, State | Format-Table
