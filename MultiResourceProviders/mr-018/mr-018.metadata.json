@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-018",
+  "displayName": "General storage v2 account with multi containers, fileShares, private endpoints, lifecycle management policy to delete blob after modification greater than specified days and upload primary connection string to keyvault.",
+  "description": ""
+}
