@@ -1,0 +1,77 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage account name to apply management policy."
+            }
+        },
+        "ruleName": {
+            "type": "string",
+            "metadata": {
+                "description": "A rule name can contain any combination of alpha numeric characters. Rule name is case-sensitive. It must be unique within a policy."
+            },
+            "defaultValue": "DeleteBaseBlobAfterModificationGreaterThan30Days"
+        },
+        "daysAfterModificationGreaterThan": {
+            "type": "int",
+            "metadata": {
+                "description": "Value indicating the age in days after last modification."
+            },
+            "defaultValue": 30
+        },
+        "filter_BlobTypes": {
+            "type": "array",
+            "metadata": {
+                "description": "An array of predefined enum values. Currently blockBlob supports all tiering and delete actions. Only delete actions are supported for appendBlob."
+            },
+            "defaultValue": [
+                "blockBlob"
+            ]
+        },
+        "filter_PrefixMatch": {
+            "type": "array",
+            "metadata": {
+                "description": "An array of strings for prefixes to be match."
+            },
+            "defaultValue": []
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts/managementPolicies",
+            "apiVersion": "2021-01-01",
+            "comments": "Deploys management policies for storage accounts.",
+            "name": "[concat(parameters('storageAccountName'),'/default')]",
+            "properties": {
+                "policy": {
+                    "rules": [
+                        {
+                            "enabled": true,
+                            "name": "[parameters('ruleName')]",
+                            "type": "Lifecycle",
+                            "definition": {
+                                "actions": {
+                                    "baseBlob": {
+                                        "delete": {
+                                            "daysAfterModificationGreaterThan": "[parameters('daysAfterModificationGreaterThan')]"
+                                        }
+                                    }
+                                },
+                                "filters": {
+                                    "blobTypes": "[parameters('filter_BlobTypes')]",
+                                    "prefixMatch": "[parameters('filter_PrefixMatch')]"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
