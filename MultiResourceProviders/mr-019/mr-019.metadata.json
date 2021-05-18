@@ -2,5 +2,5 @@
   "type": "MultiResourceProviders",
   "Id": "mr-003",
   "displayName": "General storage v2 account with multi containers, fileShares, private endpoints and integrate with Private DNS Zones.",
-  "description": ""
+  "description": "Supports permium/standard tier, Network ACL enabled, Minimum TLS version parameterized"
 }
