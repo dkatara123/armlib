@@ -1,0 +1,126 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the storage account within the specified resource group. Storage account names must be between 3 and 24 characters in length and use numbers and lower-case letters only."
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Sku Name. Supported values - Standard_LRS, Standard_GRS, Standard_RAGRS, Standard_ZRS, Premium_LRS, Premium_ZRS, Standard_GZRS, Standard_RAGZRS. Default value is Standard_LRS."
+            },
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Standard_ZRS",
+                "Premium_LRS",
+                "Premium_ZRS",
+                "Standard_GZRS",
+                "Standard_RAGZRS"
+            ]
+        },
+        "skuTier": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Sku Tier. Supported values - Standard or Premium. Default value is Standard."
+            },
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ]
+        },
+        "minimumTlsVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "TlsVersion. Supported values - TLS1_0, TLS1_1, TLS1_2."
+            },
+            "allowedValues": [
+                "TLS1_0",
+                "TLS1_1",
+                "TLS1_2"
+            ]
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "createIdentity": {
+            "type": "bool",
+            "metadata": {
+                "description": "Optional. The identity of the resource. Accepts only boolean input. To create an identity alongwith resource pass value as 'true'. Default value is false."
+            },
+            "defaultValue": false
+        },
+        "accessTier": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Required for storage accounts where kind = BlobStorage. The access tier used for billing. - Hot or Cool. Default value is Hot."
+            },
+            "allowedValues": [
+                "Hot",
+                "Cool"
+            ],
+            "defaultValue": "Hot"
+        },
+        "networkAcls": {
+            "type": "object",
+            "metadata": {
+                "description": "Rules governing the accessibility of the key vault from specific network locations. "
+            }
+        },
+        "tags": {
+            "type": "object",
+            "metadata": {
+                "description": "Optional. A maximum of 15 tags can be provided for a resource. Each tag must have a key with a length no greater than 128 characters and a value with a length no greater than 256 characters."
+            },
+            "defaultValue": {
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[parameters('name')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]"
+            },
+            "kind": "StorageV2",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "identity": "[if(parameters('createIdentity'), json('{\"type\":\"SystemAssigned\"}'), json('null'))]",
+            "properties": {
+                "accessTier": "[parameters('accessTier')]",
+                "supportsHttpsTrafficOnly": true,
+                "minimumTlsVersion": "[parameters('minimumTlsVersion')]",
+                "networkAcls": "[parameters('networkAcls')]"
+
+            },
+            "resources": [
+            ]
+        }
+    ],
+    "outputs": {
+        "primaryAccessKey": {
+            "type": "string",
+            "value": "[listKeys(parameters('name'),'2019-06-01').keys[0].value]"
+        },
+        "primaryConnectionString": {
+            "type": "string",
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('name'), ';AccountKey=', listKeys(parameters('name'),'2019-06-01').keys[0].value)]"
+        }
+    }
+}
