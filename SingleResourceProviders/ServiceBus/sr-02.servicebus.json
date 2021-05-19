@@ -1,0 +1,171 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "namespaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "namespaceSkuName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "namespaceSkuTier": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "namespaceSkuCapacity": {
+            "type": "int",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": 1
+        },
+        "virtualNetworkRules": {
+            "type": "array"
+        },
+        "topics": {
+            "type": "array",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "queues": {
+            "type": "array",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('namespaceName'))]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/ServiceBus/2021-01-01-preview/r01.namespaces.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('namespaceName')]"
+                    },
+                    "skuName": {
+                        "value": "[parameters('namespaceSkuName')]"
+                    },
+                    "skuTier": {
+                        "value": "[parameters('namespaceSkuTier')]"
+                    },
+                    "skuCapacity": {
+                        "value": "[parameters('namespaceSkuCapacity')]"
+                    },
+                    "virtualNetworkRules": {
+                        "value": "[parameters('virtualNetworkRules')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('namespaceName'))]"
+            ],
+            "copy": {
+                "name": "copy-queues",
+                "count": "[length(parameters('queues'))]"
+            },
+            "name": "[concat(parameters('uniqueString'),'-',parameters('queues')[copyIndex()].name)]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/ServiceBus/2021-01-01-preview/r01.queues.namespaces.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('queues')[copyIndex()].name]"
+                    },
+                    "namespace": {
+                        "value": "[parameters('namespaceName')]"
+                    },
+                    "enablePartitioning": {
+                        "value": "[parameters('queues')[copyIndex()].enablePartitioning]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('namespaceName'))]"
+            ],
+            "copy": {
+                "name": "copy-topics",
+                "count": "[length(parameters('topics'))]"
+            },
+            "name": "[concat(parameters('uniqueString'),'-',parameters('topics')[copyIndex()].name)]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/ServiceBus/2021-01-01-preview/r01.topics.namespaces.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "name": {
+                        "value": "[parameters('topics')[copyIndex()].name]"
+                    },
+                    "namespace": {
+                        "value": "[parameters('namespaceName')]"
+                    },
+                    "enablePartitioning": {
+                        "value": "[parameters('topics')[copyIndex()].enablePartitioning]"
+                    },
+                    "supportOrdering": {
+                        "value": "[parameters('topics')[copyIndex()].supportOrdering]"
+                    },
+                    "requiresDuplicateDetection": {
+                        "value": "[parameters('topics')[copyIndex()].requiresDuplicateDetection]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

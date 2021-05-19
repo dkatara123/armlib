@@ -1,0 +1,73 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "topicName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The topic name."
+            }
+        },
+        "namespace": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The namespace name."
+            }
+        },
+        "subscriptions": {
+            "type": "array",
+            "metadata": {
+                "description": "A collection of subscriptions"
+            },
+            "defaultValue": []
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+            "apiVersion": "2021-01-01-preview",
+            "name": "[concat(parameters('namespace'), '/', parameters('topicName'), '/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]",
+            "dependsOn": [],
+            "properties": {
+                "lockDuration": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].lockDuration]",
+                "requiresSession": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].requiresSession]",
+                "defaultMessageTimeToLive": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].defaultMessageTimeToLive]",
+                "deadLetteringOnFilterEvaluationExceptions": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].deadLetteringOnFilterEvaluationExceptions]",
+                "deadLetteringOnMessageExpiration": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].deadLetteringOnMessageExpiration]",
+                "duplicateDetectionHistoryTimeWindow": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].duplicateDetectionHistoryTimeWindow]",
+                "maxDeliveryCount": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].maxDeliveryCount]",
+                "enableBatchedOperations": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].enableBatchedOperations]",
+                "autoDeleteOnIdle": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].autoDeleteOnIdle]",
+                "forwardTo": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].forwardTo]",
+                "forwardDeadLetteredMessagesTo": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].forwardDeadLetteredMessagesTo]"
+            },
+            "resources": [
+                {
+                    "apiVersion": "2018-01-01-preview",
+                    "name": "Default",
+                    "type": "rules",
+                    "dependsOn": [
+                        "[concat('Microsoft.ServiceBus/namespaces/', parameters('namespace'), '/topics/', parameters('topicName'), '/subscriptions/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]"
+                    ],
+                    "properties": {
+                        "filterType": "SqlFilter",
+                        "sqlFilter": {
+                            "sqlExpression": "[parameters('subscriptions')[copyIndex('subscriptions_copy')].filterExpression]",
+                            "requiresPreprocessing": false
+                        }
+                    }
+                }
+            ],            
+            "copy": {
+                "name": "subscriptions_copy",
+                "count": "[length(parameters('subscriptions'))]"
+            }
+        }        
+    ],
+    "outputs": {
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "value": ""
+        },
+        "_artifactsStorageSASToken": {
+            "value": ""
+        },
+        "_artifactsStorageContainerUrl": {
+            "value": ""
+        },
+        "namespaceName": {
+            "value": ""
+        },
+        "namespaceSkuName": {
+            "value": ""
+        },
+        "namespaceSkuTier": {
+            "value": ""
+        },
+        "namespaceSkuCapacity": {
+            "value": 1
+        },
+        "virtualNetworkRules": {
+            "value": []
+        },
+        "topics": {
+            "value": []
+        },
+        "queues": {
+            "value": []
+        },
+        "virtualNetworkResourceGroupName": {
+            "value": ""
+        },
+        "virtualNetworkName": {
+            "value": ""
+        },
+        "subnetName": {
+            "value": ""
+        },
+        "privateEndpointServices": {
+            "value": ""
+        },
+        "indexNo": {
+            "value": 0
+        }
+    }
+}

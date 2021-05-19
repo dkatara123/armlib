@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "dev-d2-svcbus"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "skuName": {
+            "value": "Premium"
+        },
+        "skuTier": {
+            "value": "Premium"
+        },
+        "skuCapacity": {
+            "value": 1
+        },
+        "virtualNetworkRules": {
+            "value": []
+        },
+        "zoneRedundant": {
+            "value": true
+        }
+    }
+}
