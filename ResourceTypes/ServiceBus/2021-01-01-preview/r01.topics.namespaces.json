@@ -14,6 +14,34 @@
                 "description": "Required. The namespace name."
             }
         },
+        "msgTimeToLive": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. ."
+            },
+            "defaultValue": "P10675199DT2H48M5.4775807S"
+        },
+        "maxSize": {
+            "type": "int",
+            "metadata": {
+                "description": "Optional. ."
+            },
+            "defaultValue": 1024
+        },
+        "autoDeleteMsgTime": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. ."
+            },
+            "defaultValue": "P10675199DT2H48M5.4775807S"
+        },
+        "dupDetectionHistoryTimeWindow": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. ."
+            },
+            "defaultValue": "PT10M"
+        },
         "enablePartitioning": {
             "type": "bool",
             "metadata": {
@@ -46,6 +74,13 @@
             "type": "Microsoft.ServiceBus/namespaces/topics",
             "apiVersion": "2018-01-01-preview",
             "properties": {
+                "defaultMessageTimeToLive": "[parameters('msgTimeToLive')]",
+                "maxSizeInMegabytes": "[parameters('maxSize')]",
+                "duplicateDetectionHistoryTimeWindow": "[parameters('dupDetectionHistoryTimeWindow')]",
+                "enableBatchedOperations": true,
+                "status": "Active",
+                "autoDeleteOnIdle": "[parameters('autoDeleteMsgTime')]",
+                "enableExpress": false,
                 "enablePartitioning": "[parameters('enablePartitioning')]",
                 "supportOrdering": "[parameters('supportOrdering')]",
                 "requiresDuplicateDetection": "[parameters('requiresDuplicateDetection')]"

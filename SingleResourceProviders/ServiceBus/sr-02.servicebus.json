@@ -165,6 +165,18 @@
                     "namespace": {
                         "value": "[parameters('namespaceName')]"
                     },
+                    "dupDetectionHistoryTimeWindow": {
+                        "value": "[parameters('topics')[copyIndex()].dupDetectionHistoryTimeWindow]"
+                    },
+                    "msgTimeToLive": {
+                        "value": "[parameters('topics')[copyIndex()].msgTimeToLive]"
+                    },
+                    "maxSize": {
+                        "value": "[parameters('topics')[copyIndex()].maxSize]"
+                    },
+                    "autoDeleteMsgTime": {
+                        "value": "[parameters('topics')[copyIndex()].autoDeleteMsgTime]"
+                    },
                     "enablePartitioning": {
                         "value": "[parameters('topics')[copyIndex()].enablePartitioning]"
                     },

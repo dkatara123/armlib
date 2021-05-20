@@ -31,6 +31,10 @@
             "value": [
                 {
                     "name": "topics-1",
+                    "dupDetectionHistoryTimeWindow": "",
+                    "msgTimeToLive": "",
+                    "maxSize": 1024,
+                    "autoDeleteMsgTime": "",
                     "enablePartitioning": false
                 }
             ]
