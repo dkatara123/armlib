@@ -8,6 +8,18 @@
         "namespace": {
             "value": "dev-d2-svcbus"
         },
+        "dupDetectionHistoryTimeWindow": {
+            "value": "string"
+        },
+        "msgTimeToLive": {
+            "value": "string"
+        },
+        "maxSize": {
+            "value": "integer"
+        },
+        "autoDeleteMsgTime": {
+            "value": "string"
+        },
         "enablePartitioning": {
             "value": true
         }

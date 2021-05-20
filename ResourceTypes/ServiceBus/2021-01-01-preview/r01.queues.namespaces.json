@@ -14,6 +14,34 @@
                 "description": "Required. The namespace name."
             }
         },
+        "msglockDuration": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Msg lock time."
+            },
+            "defaultValue": "PT1M" 
+        },
+        "msgTimeToLive": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. ."
+            },
+            "defaultValue": "P10675199DT2H48M5.4775807S"
+        },
+        "maxSize": {
+            "type": "int",
+            "metadata": {
+                "description": "Optional. ."
+            },
+            "defaultValue": 1024
+        },
+        "autoDeleteMsgTime": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. ."
+            },
+            "defaultValue": "P10675199DT2H48M5.4775807S"
+        },
         "enablePartitioning": {
             "type": "bool",
             "metadata": {
@@ -32,7 +60,20 @@
             "type": "Microsoft.ServiceBus/namespaces/queues",
             "apiVersion": "2018-01-01-preview",
             "properties": {
-                "enablePartitioning": "[parameters('enablePartitioning')]"
+                "lockDuration": "[parameters('msglockDuration')]",
+                "maxSizeInMegabytes": "[parameters('maxSize')]",
+                "requiresDuplicateDetection": false,
+                "requiresSession": true,
+                "defaultMessageTimeToLive": "[parameters('msgTimeToLive')]",
+                "deadLetteringOnMessageExpiration": false,
+                "enableBatchedOperations": true,
+                "duplicateDetectionHistoryTimeWindow": "PT10M",
+                "maxDeliveryCount": 10,
+                "status": "Active",
+                "autoDeleteOnIdle": "[parameters('autoDeleteMsgTime')]",
+                "enablePartitioning": "[parameters('enablePartitioning')]",
+                "enableExpress": false
+
             },
             "resources": [
             ]
