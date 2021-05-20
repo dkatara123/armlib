@@ -5,7 +5,7 @@
 name: $(Date:yyyy.M.d)$(Rev:.r)
 
 trigger:
-- main
+- scip-1.0
 
 resources:
   repositories: 
