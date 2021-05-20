@@ -11,7 +11,7 @@ resources:
   repositories: 
   - repository: ARMLib
     type: git
-    name: "Spectrum-ARM-Library"
+    name: "Spectrum-CIP-ARM-Library"
 
 steps:
 - task: CopyFiles@2
