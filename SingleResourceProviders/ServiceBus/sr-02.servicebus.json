@@ -40,6 +40,20 @@
         "virtualNetworkRules": {
             "type": "array"
         },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        },
         "topics": {
             "type": "array",
             "metadata": {
@@ -87,6 +101,12 @@
                     },
                     "virtualNetworkRules": {
                         "value": "[parameters('virtualNetworkRules')]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
                     }
                 }
             }

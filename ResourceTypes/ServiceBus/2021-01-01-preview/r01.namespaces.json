@@ -46,6 +46,20 @@
                 "description": "description"
             },
             "defaultValue": true
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
         }
     },
     "functions": [
@@ -68,7 +82,37 @@
             "properties": {
                 "zoneRedundant": "[if(equals(parameters('zoneRedundant'),'Premium'), parameters('zoneRedundant'), json('null'))]"
             },
-            "resources": [
+                        "resources": [
+                {
+                    "condition": "[parameters('sendDiagnosticsToWorkspace')]",
+                    "type": "providers/diagnosticSettings",
+                    "name": "Microsoft.Insights/SendToLogAnalytics",
+                    "dependsOn": [
+                        "[parameters('name')]"
+                    ],
+                    "apiVersion": "2017-05-01-preview",
+                    "properties": {
+                        "name": "SendToLogAnalytics",
+                        "workspaceId": "[parameters('workspaceId')]",
+                        "logs": [
+                            {
+                                "category": "OperationalLogs",
+                                "enabled": true
+                            },
+                            {
+                                "category": "VNetAndIPFilteringLogs",
+                                "enabled": true
+                            }
+
+                        ],
+                        "metrics": [
+                            {
+                                "category": "AllMetrics",
+                                "enabled": true
+                            }
+                        ]
+                    }
+                }
             ]
         },
         {

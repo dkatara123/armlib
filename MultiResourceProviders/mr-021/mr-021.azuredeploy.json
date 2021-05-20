@@ -44,6 +44,20 @@
             },
             "defaultValue": 1
         },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        },
         "virtualNetworkRules": {
             "type": "array"
         },
@@ -116,6 +130,12 @@
                     },
                     "namespaceSkuCapacity": {
                         "value": "[parameters('namespaceSkuCapacity')]"
+                    },
+                    "sendDiagnosticsToWorkspace": {
+                        "value": "[parameters('sendDiagnosticsToWorkspace')]"
+                    },
+                    "workspaceId": {
+                        "value": "[parameters('workspaceId')]"
                     },
                     "virtualNetworkRules": {
                         "value": "[parameters('virtualNetworkRules')]"
