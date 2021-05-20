@@ -119,6 +119,18 @@
                     "namespace": {
                         "value": "[parameters('namespaceName')]"
                     },
+                    "msglockDuration": {
+                        "value": "[parameters('queues')[copyIndex()].msglockDuration]"
+                    },
+                    "msgTimeToLive": {
+                        "value": "[parameters('queues')[copyIndex()].msgTimeToLive]"
+                    },
+                    "maxSize": {
+                        "value": "[parameters('queues')[copyIndex()].maxSize]"
+                    },
+                    "autoDeleteMsgTime": {
+                        "value": "[parameters('queues')[copyIndex()].autoDeleteMsgTime]"
+                    },
                     "enablePartitioning": {
                         "value": "[parameters('queues')[copyIndex()].enablePartitioning]"
                     }

@@ -39,6 +39,10 @@
             "value": [
                 {
                     "name": "queues-1",
+                    "msglockDuration": "",
+                    "msgTimeToLive": "",
+                    "maxSize": 1024,
+                    "autoDeleteMsgTime": "",
                     "enablePartitioning": false
                 }
             ]
