@@ -33,6 +33,14 @@
             },            
             "type": "String"
         },
+        "virtualNetworkType": {
+            "metadata": {
+                "descrption": "VNET Type"
+            },            
+            "type": "String",
+            "defaultValue": "internal"
+        },
+        
         "vnetResourceGroupName": {
             "type": "string"
         },
@@ -80,7 +88,7 @@
             "properties": {
                 "publisherEmail": "[parameters('publisherEmail')]",
                 "publisherName": "[parameters('publisherName')]",
-                "virtualNetworkType": "External",
+                "virtualNetworkType": "[parameters('virtualNetworkType')]",
                 "virtualNetworkConfiguration": {
                     "subnetResourceId": "[variables('subnetRef')]",
                     "location": "[parameters('location')]"
