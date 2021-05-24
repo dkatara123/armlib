@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "roleDefinitionGuid": {
+            "type": "string",
+            "metadata": {
+                "description": "The role definition guid assigned to role. Refer ID for built-in roles - https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#all"
+            }
+        },
+        "principalId": {
+            "type": "string",
+            "metadata": {
+                "description": "The principal ID assigned to the role. This maps to the ID inside the Active Directory. It can point to a user, service principal, or security group."
+            }
+        },
+        "scope": {
+            "type": "string",
+            "metadata": {
+                "description": "The permission scope"
+            }
+        }
+    },
+    "resources": [
+        {
+            "name": "[guid(parameters('roleDefinitionGuid'), parameters('principalId'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2018-09-01-preview",
+            "properties": {
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionGuid'))]",
+                "principalId": "[parameters('principalId')]",
+                "scope": "[parameters('scope')]"
+            }
+        }
+    ]
+}
