@@ -1,0 +1,90 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflowName": {
+            "type": "string",
+            "metadata": {
+                "description": "The workflow name."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "tags": {
+            "type": "object",
+            "metadata": {
+                "description": "Optional. A maximum of 15 tags can be provided for a resource. Each tag must have a key with a length no greater than 128 characters and a value with a length no greater than 256 characters."
+            },
+            "defaultValue": {
+            }
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": false
+        },
+        "workspaceId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": null
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2019-05-01",
+            "name": "[parameters('workflowName')]",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "triggers": {},
+                    "actions": {},
+                    "outputs": {}
+                },
+                "parameters": {}
+            },
+            "resources": [
+                {
+                    "condition": "[parameters('sendDiagnosticsToWorkspace')]",
+                    "type": "Microsoft.Logic/workflows/providers/diagnosticSettings",
+                    "name": "[concat(parameters('workflowName'),'/Microsoft.Insights/SendToLogAnalytics')]",
+                    "dependsOn": [
+                        "[parameters('workflowName')]"
+                    ],
+                    "apiVersion": "2017-05-01-preview",
+                    "properties": {
+                        "name": "SendToLogAnalytics",
+                        "workspaceId": "[parameters('workspaceId')]",
+                        "logs": [
+                            {
+                                "category": "WorkflowRuntime",
+                                "enabled": true
+                            }
+                        ],
+                        "metrics": [
+                            {
+                                "category": "AllMetrics",
+                                "enabled": true
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}
