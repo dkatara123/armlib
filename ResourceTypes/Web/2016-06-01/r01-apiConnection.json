@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "apiConnectionName": {
+            "type": "string",
+            "metadata": {
+                "description": "The api Connection Name name."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "tags": {
+            "type": "object",
+            "metadata": {
+                "description": "Optional. A maximum of 15 tags can be provided for a resource. Each tag must have a key with a length no greater than 128 characters and a value with a length no greater than 256 characters."
+            },
+            "defaultValue": {
+            }
+        },
+        "apiDisplayName": {
+            "type": "string",
+            "metadata": {
+                "description": "The api Connection dispaly name."
+            }
+        },
+        "apiResourceId": {
+            "type": "string",
+            "metadata": {
+                "description": "The api resource id."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('apiConnectionName')]",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "kind": "V1",
+            "properties": {
+                "displayName": "[parameters('apiDisplayName')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[parameters('apiResourceId')]"
+                }
+            }
+        }
+    ]
+}
