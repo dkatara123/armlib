@@ -36,6 +36,12 @@
                 "description": "description"
             },
             "defaultValue": null
+        },
+        "accessControl": {
+            "type": "object",
+            "metadata": {
+                "description": "description"
+            }
         }
     },
     "variables": {},
@@ -48,15 +54,16 @@
             "tags": "[parameters('tags')]",
             "properties": {
                 "state": "Enabled",
-                "definition": {
+                "definition":  {
                     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {},
-                    "triggers": {},
                     "actions": {},
-                    "outputs": {}
+                    "contentVersion": "1.0.0.0",
+                    "outputs": {},
+                    "parameters": {},
+                    "triggers": {}
                 },
-                "parameters": {}
+                "parameters": {},
+                "accessControl": "[parameters('accessControl')]"
             },
             "resources": [
                 {
