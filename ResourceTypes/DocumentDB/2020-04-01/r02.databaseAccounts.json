@@ -31,8 +31,7 @@
             "metadata": {
                 "description": "An array that contains the georeplication locations enabled for the Cosmos DB account. "
             },
-            "defaultValue": [
-            ]
+            "defaultValue": []
         },
         "singleGeoReplication": {
             "type": "bool",
@@ -45,9 +44,10 @@
             "defaultValue": "3.2",
             "allowedValues": [
                 "3.2",
-                "3.6"
+                "3.6",
+                "4.0"
             ],
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "Specifies the MongoDB server version to use."
             }
@@ -67,18 +67,15 @@
             "defaultValue": null
         }
     },
-    "functions": [
-    ],
-    "variables": {
-    },
+    "functions": [],
+    "variables": {},
     "resources": [
         {
             "name": "[parameters('name')]",
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2020-04-01",
             "location": "[parameters('location')]",
-            "tags": {
-            },
+            "tags": {},
             "kind": "[parameters('kind')]",
             "properties": {
                 "copy": [
@@ -172,6 +169,5 @@
             ]
         }
     ],
-    "outputs": {
-    }
+    "outputs": {}
 }
