@@ -98,7 +98,7 @@
                 "name": "[parameters('skuName')]",
                 "tier": "[parameters('skuTier')]"
             },
-            "kind": "StorageV2",
+            "kind": "BlockBlobStorage",
             "location": "[parameters('location')]",
             "tags": "[parameters('tags')]",
             "identity": "[if(parameters('createIdentity'), json('{\"type\":\"SystemAssigned\"}'), json('null'))]",
