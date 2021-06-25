@@ -17,23 +17,25 @@
             "metadata": {
                 "description": "Network Security Group Rules"
             },
-            "defaultValue":[{
-                "name": "allow-ssh",
-                "description": "Allow SSH",
-                "protocol": "*",
-                "access": "Allow",
-                "priority": 100,
-                "direction": "Inbound",
-                "sourcePortRange": "*",
-                "sourcePortRanges": [],
-                "sourceAddressPrefix": "*",
-                "sourceAddressPrefixes": [],
-                "destinationPortRange": "22",
-                "destinationPortRanges": [],
-                "destinationAddressPrefix": "*",
-                "destinationAddressPrefixes": []
-            }]
-        }        
+            "defaultValue": [
+                {
+                    "name": "allow-ssh",
+                    "description": "Allow SSH",
+                    "protocol": "*",
+                    "access": "Allow",
+                    "priority": 100,
+                    "direction": "Inbound",
+                    "sourcePortRange": "*",
+                    "sourcePortRanges": [],
+                    "sourceAddressPrefix": "*",
+                    "sourceAddressPrefixes": [],
+                    "destinationPortRange": "22",
+                    "destinationPortRanges": [],
+                    "destinationAddressPrefix": "*",
+                    "destinationAddressPrefixes": []
+                }
+            ]
+        }
     },
     "functions": [
     ],
@@ -41,7 +43,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2020-07-01",            
+            "apiVersion": "2020-07-01",
             "type": "Microsoft.Network/networkSecurityGroups",
             "name": "[parameters('name')]",
             "location": "[parameters('location')]",
