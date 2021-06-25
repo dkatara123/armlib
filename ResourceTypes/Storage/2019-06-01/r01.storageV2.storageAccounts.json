@@ -89,7 +89,8 @@
             "identity": "[if(parameters('createIdentity'), json('{\"type\":\"SystemAssigned\"}'), json('null'))]",
             "properties": {
                 "accessTier": "[parameters('accessTier')]",
-                "supportsHttpsTrafficOnly": true
+                "supportsHttpsTrafficOnly": true,
+                "minimumTlsVersion": "TLS1_2"
             },
             "resources": [
             ]
