@@ -68,6 +68,45 @@
             },
             "defaultValue": {
             }
+        },
+        "networkAcls_Bypass": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies whether traffic is bypassed for Logging/Metrics/AzureServices. Possible values are any combination of Logging|Metrics|AzureServices (For example, 'Logging, Metrics'), or None to bypass none of those traffics."
+            },
+            "defaultValue": "None"
+        },
+        "networkAcls_DefaultAction": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies the default action of allow or deny when no other rules match."
+            },
+            "defaultValue": "Deny",
+            "allowedValues": [
+                "Allow",
+                "Deny"
+            ]
+        },
+        "networkAcls_IpRules": {
+            "type": "array",
+            "metadata": {
+                "description": "Sets the IP ACL rules."
+            },
+            "defaultValue": []
+        },
+        "networkAcls_ResourceAccessRules": {
+            "type": "array",
+            "metadata": {
+                "description": "Sets the resource access rules."
+            },
+            "defaultValue": []
+        },
+        "networkAcls_VirtualNetworkRules": {
+            "type": "array",
+            "metadata": {
+                "description": "Sets the virtual network rule."
+            },
+            "defaultValue": []
         }
     },
     "functions": [
@@ -90,10 +129,15 @@
             "properties": {
                 "accessTier": "[parameters('accessTier')]",
                 "supportsHttpsTrafficOnly": true,
-                "minimumTlsVersion": "TLS1_2"
-            },
-            "resources": [
-            ]
+                "minimumTlsVersion": "TLS1_2",
+                "networkAcls": {
+                    "resourceAccessRules": "[parameters('networkAcls_ResourceAccessRules')]",
+                    "bypass": "[parameters('networkAcls_Bypass')]",
+                    "virtualNetworkRules": "[parameters('networkAcls_VirtualNetworkRules')]",
+                    "ipRules": "[parameters('networkAcls_IpRules')]",
+                    "defaultAction": "[parameters('networkAcls_DefaultAction')]"
+                }
+            }
         }
     ],
     "outputs": {
