@@ -149,6 +149,12 @@
                             "name": "XDT_MicrosoftApplicationInsights_Mode",
                             "value": "recommended"
                         },
+                        {   "name": "WEBSITE_VNET_ROUTE_ALL",
+                            "value": "1"
+                        },
+                        {   "name": "WEBSITE_DNS_SERVER",
+                            "value": "168.63.129.16"
+                        },
                         {
                             "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
                             "value": "1.0.0"
