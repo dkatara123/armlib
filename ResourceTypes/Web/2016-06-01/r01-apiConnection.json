@@ -44,7 +44,7 @@
             "name": "[parameters('apiConnectionName')]",
             "location": "[parameters('location')]",
             "tags": "[parameters('tags')]",
-            "kind": "V1",
+            "kind": "V2",
             "properties": {
                 "displayName": "[parameters('apiDisplayName')]",
                 "customParameterValues": {},
