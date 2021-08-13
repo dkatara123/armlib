@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-022",
+  "displayName": "Standard logic App with Windows ASP, VNet Integration and Private Endpoints, diagnostics settings enabled.",
+  "description": "System assigned identity enabled,HTTPS enabled, TLS,Run time monitoring enabled, http20Enabled "
+}
