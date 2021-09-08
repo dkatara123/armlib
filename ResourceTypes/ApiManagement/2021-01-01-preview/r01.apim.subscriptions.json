@@ -1,0 +1,66 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "apimName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The apim name."
+            }
+        },
+        "users": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The users name."
+            }
+        },
+        "products": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The products name."
+            }
+        },
+        "subscriptions": {
+            "type": "array",
+            "metadata": {
+                "description": "A collection of subscriptions"
+            },
+            "defaultValue": []
+        },
+        "displayName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The displayName."
+            }
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.ApiManagement/service/subscriptions",
+            "apiVersion": "2021-01-01-preview",
+            "name": "[concat(parameters('apimName'), '/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]",
+            "dependsOn": [
+                "[concat('Microsoft.ApiManagement/service/', parameters('subscriptions')[copyIndex('subscriptions_copy')].name)]",
+                "[concat('Microsoft.ApiManagement/service/users', parameters('subscriptions')[copyIndex('subscriptions_copy')].name, parameters('users'))]",
+                "[concat('Microsoft.ApiManagement/service/products', parameters('subscriptions')[copyIndex('subscriptions_copy')].name, parameters('products'))]"
+            ],
+            "properties": {
+                "ownerId": "[resourceId('Microsoft.ApiManagement/service/users', parameters('apimName'), parameters('users'))]",
+                "scope": "[resourceId('Microsoft.ApiManagement/service/products', parameters('apimName'), parameters('products'))]",
+                "displayName": "[parameters('displayName')]",
+                "state": "active",
+                "allowTracing": false
+            },
+            "copy": {
+                "name": "subscriptions_copy",
+                "count": "[length(parameters('subscriptions'))]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
