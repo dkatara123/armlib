@@ -42,11 +42,11 @@
         {
             "type": "Microsoft.ApiManagement/service/subscriptions",
             "apiVersion": "2021-01-01-preview",
-            "name": "[concat(parameters('apimName'), '/', parameters('subscriptions').name)]",
+            "name": "[concat(parameters('apimName'), '/', parameters('subscriptions'))]",
             "dependsOn": [
-                "[concat('Microsoft.ApiManagement/service/', parameters('subscriptions').name)]",
-                "[concat('Microsoft.ApiManagement/service/users', parameters('subscriptions').name, parameters('users'))]",
-                "[concat('Microsoft.ApiManagement/service/products', parameters('subscriptions').name, parameters('products'))]"
+                "[concat('Microsoft.ApiManagement/service/', parameters('subscriptions'))]",
+                "[concat('Microsoft.ApiManagement/service/users', parameters('subscriptions'), parameters('users'))]",
+                "[concat('Microsoft.ApiManagement/service/products', parameters('subscriptions'), parameters('products'))]"
             ],
             "properties": {
                 "ownerId": "[resourceId('Microsoft.ApiManagement/service/users', parameters('apimName'), parameters('users'))]",
