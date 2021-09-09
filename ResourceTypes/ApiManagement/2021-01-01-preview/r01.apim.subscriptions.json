@@ -24,8 +24,7 @@
             "type": "string",
             "metadata": {
                 "description": "A collection of subscriptions"
-            },
-            "defaultValue": []
+            }
         },
         "displayName": {
             "type": "string",
