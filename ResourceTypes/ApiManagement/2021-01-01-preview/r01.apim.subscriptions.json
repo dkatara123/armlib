@@ -21,7 +21,7 @@
             }
         },
         "subscriptions": {
-            "type": "array",
+            "type": "object",
             "metadata": {
                 "description": "A collection of subscriptions"
             },
