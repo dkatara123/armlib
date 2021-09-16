@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "apimName": {
+        "apiName": {
             "type": "string",
             "metadata": {
                 "description": "Required. The apim name."
@@ -20,10 +20,10 @@
                 "description": "Required. The products name."
             }
         },
-        "subscriptions": {
+        "subscriptionsName": {
             "type": "string",
             "metadata": {
-                "description": "A collection of subscriptions"
+                "description": "Name of subscriptions"
             }
         },
         "displayName": {
@@ -40,17 +40,14 @@
     "resources": [
         {
             "type": "Microsoft.ApiManagement/service/subscriptions",
-            "apiVersion": "2021-01-01-preview",
-            "name": "[concat(parameters('apimName'), '/', parameters('subscriptions'))]",
-            "dependsOn": [
-                "[concat('Microsoft.ApiManagement/service/', parameters('subscriptions'))]",
-                "[concat('Microsoft.ApiManagement/service/users', parameters('subscriptions'), parameters('users'))]",
-                "[concat('Microsoft.ApiManagement/service/products', parameters('subscriptions'), parameters('products'))]"
-            ],
+            "apiVersion": "2017-03-01",
+            "name": "[concat(parameters('apiName'), '/', parameters('subscriptionsName'))]",
+            "dependsOn": [],
             "properties": {
-                "ownerId": "[resourceId('Microsoft.ApiManagement/service/users', parameters('apimName'), parameters('users'))]",
-                "scope": "[resourceId('Microsoft.ApiManagement/service/products', parameters('apimName'), parameters('products'))]",
-                "displayName": "[parameters('displayName')]",
+                "productId": "[resourceId('Microsoft.ApiManagement/service/products/', parameters('apiName'), parameters('products'))]",
+                "userId": "[resourceId('Microsoft.ApiManagement/service/users/', parameters('apiName'), '/',parameters('users'))]",
+                "scope": "[resourceId('Microsoft.ApiManagement/service/products/', parameters('apiName'), '/', parameters('products'))]",
+                "displayName": "[parameters(displayName)]",
                 "state": "active",
                 "allowTracing": false
             }
