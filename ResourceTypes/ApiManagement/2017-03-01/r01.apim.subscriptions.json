@@ -44,9 +44,9 @@
             "name": "[concat(parameters('apiName'), '/', parameters('subscriptionsName'))]",
             "dependsOn": [],
             "properties": {
-                "productId": "[resourceId('Microsoft.ApiManagement/service/products/' parameters('apiName') parameters('products'))]",
-                "userId": "[resourceId('Microsoft.ApiManagement/service/users/' parameters('apiName') '/'parameters('users'))]",
-                "scope": "[resourceId('Microsoft.ApiManagement/service/products/' parameters('apiName') '/' parameters('products'))]",
+                "productId": "[resourceId('Microsoft.ApiManagement/service/products/', parameters('apiName'), parameters('products'))]",
+                "userId": "[resourceId('Microsoft.ApiManagement/service/users/', parameters('apiName'), '/'parameters('users'))]",
+                "scope": "[resourceId('Microsoft.ApiManagement/service/products/', parameters('apiName'), '/' parameters('products'))]",
                 "displayName": "[parameters('displayName')]",
                 "state": "active",
                 "allowTracing": false
