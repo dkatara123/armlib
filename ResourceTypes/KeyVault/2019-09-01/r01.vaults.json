@@ -87,6 +87,13 @@
                 "description": "description"
             },
             "defaultValue": null
+        },
+        "enablePurgeProtection": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": true
         }
     },
     "functions": [],
@@ -112,7 +119,7 @@
                 "softDeleteRetentionInDays": 90,
                 "enableRbacAuthorization": "[parameters('enableRbacAuthorization')]",
                 "createMode": "[parameters('createMode')]",
-                "enablePurgeProtection": true,
+                "enablePurgeProtection": "[parameters('enablePurgeProtection')]",
                 "networkAcls": "[parameters('networkAcls')]"
             },
             "resources": [
