@@ -66,6 +66,13 @@
             "metadata": {
                 "description": "Property to specify whether Azure Resource Manager is permitted to retrieve secrets from the key vault."
             }
+        },
+        "enablePurgeProtection": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": true
         }
     },
     "functions": [
@@ -98,6 +105,9 @@
                     },
                     "enabledForTemplateDeployment": {
                         "value": "[parameters('enabledForTemplateDeployment')]"
+                    },
+                    "enablePurgeProtection": {
+                        "value": "[parameters('enablePurgeProtection')]"
                     }
                 },
                 "mode": "Incremental",
