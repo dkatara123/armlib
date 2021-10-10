@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-019",
+  "displayName": "CosmosDB with PrivateEndpoints.",
+  "description": ""
+}
