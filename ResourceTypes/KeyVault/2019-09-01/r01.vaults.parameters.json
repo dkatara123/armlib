@@ -3,7 +3,36 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "name": {
-            "value": "shab-test-kv"
+            "value": "shab-test-keyvault" // TODO: Fill in parameter value
+        },
+        "skuName": {
+            "value": "standard"
+        },
+        "enabledForDeployment": {
+            "value": false
+        },
+        "enabledForDiskEncryption": {
+            "value": false
+        },
+        "enabledForTemplateDeployment": {
+            "value": false
+        },
+        "enableRbacAuthorization": {
+            "value": false
+        },
+        "createMode": {
+            "value": "default"
+        },
+        "networkAcls": {
+            "value": {
+                // TODO: Fill in parameter value
+            }
+        },
+        "sendDiagnosticsToWorkspace": {
+            "value": false
+        },
+        "enablePurgeProtection": {
+            "value": false
         }
     }
 }

@@ -72,7 +72,7 @@
             "metadata": {
                 "description": "description"
             },
-            "defaultValue": true
+            "defaultValue": false
         }
     },
     "functions": [
