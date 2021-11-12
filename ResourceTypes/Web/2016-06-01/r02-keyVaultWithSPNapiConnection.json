@@ -1,0 +1,106 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "apiConnectionName": {
+            "type": "string",
+            "metadata": {
+                "description": "The api Connection Name name."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "tags": {
+            "type": "object",
+            "metadata": {
+                "description": "Optional. A maximum of 15 tags can be provided for a resource. Each tag must have a key with a length no greater than 128 characters and a value with a length no greater than 256 characters."
+            },
+            "defaultValue": {}
+        },
+        "apiDisplayName": {
+            "type": "string",
+            "metadata": {
+                "description": "The api Connection dispaly name."
+            }
+        },
+        "apiResourceId": {
+            "type": "string",
+            "metadata": {
+                "description": "The api resource id."
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "key Vault name."
+            }
+        },
+        "clientId": {
+            "type": "string",
+            "metadata": {
+                "description": "Client Id of SPN."
+            }
+        }, 
+        "tenantId": {
+            "type": "string",
+            "metadata": {
+                "description": "Tenant id of SPN."
+            }
+        },
+        "clientSecret": {
+            "type": "string",
+            "metadata": {
+                "description": "SPN secret value."
+            }
+        },
+        "logicAppResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Logic app RG."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('apiConnectionName')]",
+            "type": "Microsoft.Web/connections",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "kind": "V2",
+            "apiVersion": "2016-06-01",
+            "properties": {
+                "displayName": "[parameters('apiDisplayName')]",
+                "authenticatedUser": {},
+                "statuses": [
+                    {
+                        "status": "Connected"
+                    }
+                ],
+                "parameterValues": {
+                    "vaultName": "[parameters('keyVaultName')]",
+                    "token:clientId": "[parameters('clientId')]",
+                    "token:TenantId": "[parameters('tenantId')]",
+                    "token:ClientSecret": "[parameters('clientSecret')]",
+                    "token:grantType": "client_credentials"
+                },
+                "customParameterValues": {},
+                "createdTime": "2021-07-19T09:56:00.7710888Z",
+                "changedTime": "2021-07-19T09:56:01.8492284Z",
+                "api": {
+                    "name": "[parameters('apiConnectionName')]",
+                    "displayName": "[parameters('apiDisplayName')]",
+                    "id": "[parameters('apiResourceId')]"
+                },
+                "testLinks": [],
+                "testRequests": []
+            },
+            "id": "[resourceId(parameters('logicAppResourceGroup'),'Microsoft.Web/connections',parameters('apiConnectionName'))]"
+        }
+    ]
+}
