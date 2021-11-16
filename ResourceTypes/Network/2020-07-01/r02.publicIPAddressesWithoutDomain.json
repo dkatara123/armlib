@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "location": {
+            "type": "String",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "skuName": {
+            "type": "String",
+            "defaultValue": "Basic"
+        },
+        "skuTier": {
+            "type": "String",
+            "defaultValue": "Regional"
+        },
+        "addressType": {
+            "type": "String",
+            "defaultValue": "Dynamic"
+        },        
+        "ipAddress": {
+            "type": "string"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "apiVersion": "2020-07-01",            
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "tags": {
+            },
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]"
+            },
+            "properties": {
+                "ipAddress": "[parameters('ipAddress')]",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "[parameters('addressType')]",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": [
+                ]
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
