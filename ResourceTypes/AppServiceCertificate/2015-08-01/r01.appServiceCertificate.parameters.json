@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "productType": {
+            "value": "StandardDomainValidatedSsl"
+        },
+        "validytyInYears": {
+            "value": 1
+        },
+        "tags": {
+            "value": {}
+        },
+        "autoRenew": {
+            "value": true
+        },
+        "rootHostName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "certificateOrderName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "existingKeyVaultId": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "existingAppName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "existingAppLocation": {
+            "value": "" // TODO: Fill in parameter value
+        }
+    }
+}

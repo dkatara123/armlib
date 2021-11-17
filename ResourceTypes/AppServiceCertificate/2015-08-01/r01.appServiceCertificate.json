@@ -1,0 +1,112 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "productType": {
+        "type": "string",
+        "allowedValues": [
+          "StandardDomainValidatedSsl",
+          "StandardDomainValidatedWildCardSsl"
+        ],
+        "defaultValue": "StandardDomainValidatedSsl"
+      },
+      "validytyInYears": {
+        "type": "int",
+        "defaultValue": 1
+      },
+      "tags": {
+        "type": "object",
+        "defaultValue": {}
+      },
+      "autoRenew": {
+        "type": "bool",
+        "defaultValue": true
+      },
+      "rootHostName": {
+        "type": "string"
+      },
+      "certificateOrderName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Certificate Order."
+        }
+      },
+      "existingKeyVaultId": {
+        "type": "string",
+        "metadata": {
+          "description": "Key Vault Id for fetching secret."
+        }
+      },
+      "existingAppName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing Web App/Function App."
+        }
+      },
+      "existingAppLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of existing app service."
+        }
+      }
+    },
+    "variables": {
+      "distinguishedName": "[concat('CN=',parameters('rootHostName'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.CertificateRegistration/certificateOrders",
+        "apiVersion": "2015-08-01",
+        "name": "[parameters('certificateOrderName')]",
+        "location": "global",
+        "tags": "[parameters('tags')]",
+        "properties": {
+          "autoRenew": "[parameters('autoRenew')]",
+          "distinguishedName": "[variables('distinguishedName')]",
+          "productType": "[parameters('productType')]",
+          "validityInYears": "[parameters('validytyInYears')]"
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites/domainOwnershipIdentifiers",
+        "name": "[concat(parameters('existingAppName'), concat('/', parameters('certificateOrderName')))]",
+        "apiVersion": "2015-08-01",
+        "location": "[parameters('existingAppLocation')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.CertificateRegistration/certificateOrders', parameters('certificateOrderName'))]"
+        ],
+        "properties": {
+          "id": "[reference(resourceId('Microsoft.CertificateRegistration/certificateOrders', parameters('certificateOrderName'))).DomainVerificationToken]"
+        }
+      },
+      {
+        "type": "Microsoft.CertificateRegistration/certificateOrders/certificates",
+        "name": "[concat(parameters('certificateOrderName'), concat('/', parameters('certificateOrderName')))]",
+        "apiVersion": "2015-08-01",
+        "location": "global",
+        "dependsOn": [
+          "[resourceId('Microsoft.CertificateRegistration/certificateOrders', parameters('certificateOrderName'))]"
+        ],
+        "properties": {
+          "keyVaultId": "[parameters('existingKeyVaultId')]",
+          "keyVaultSecretName": "[parameters('certificateOrderName')]"
+        }
+      },
+      {
+        "type": "Microsoft.Web/certificates",
+        "name": "[parameters('certificateOrderName')]",
+        "apiVersion": "2015-08-01",
+        "location": "[parameters('existingAppLocation')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.CertificateRegistration/certificateOrders/certificates', parameters('certificateOrderName'), parameters('certificateOrderName'))]"
+        ],
+        "properties": {
+          "keyVaultId": "[parameters('existingKeyVaultId')]",
+          "keyVaultSecretName": "[parameters('certificateOrderName')]",
+          "serverFarmId": "/subscriptions/44328f0f-3fad-40a5-ae95-390f5b1a0d8c/resourceGroups/arm-dev-eastus-infra-rg/providers/Microsoft.Web/serverFarms/asp-dev-eastus-infra-01"
+        }
+      }
+    ],
+    "outputs": {
+    }
+  }

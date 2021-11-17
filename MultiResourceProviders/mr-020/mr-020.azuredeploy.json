@@ -1,0 +1,182 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueString": {
+            "type": "string",
+            "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+        },
+        "_artifactsStorageSASToken": {
+            "type": "securestring"
+        },
+        "_artifactsStorageContainerUrl": {
+            "type": "string"
+        },
+        "productType": {
+        "type": "string",
+        "allowedValues": [
+          "StandardDomainValidatedSsl",
+          "StandardDomainValidatedWildCardSsl"
+        ],
+        "defaultValue": "StandardDomainValidatedSsl"
+      },
+      "validytyInYears": {
+        "type": "int",
+        "defaultValue": 1
+      },
+      "tags": {
+        "type": "object",
+        "defaultValue": {}
+      },
+      "autoRenew": {
+        "type": "bool",
+        "defaultValue": true
+      },
+      "rootHostName": {
+        "type": "string"
+      },
+      "certificateOrderName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Certificate Order."
+        }
+      },
+      "existingKeyVaultId": {
+        "type": "string",
+        "metadata": {
+          "description": "Key Vault Id for fetching secret."
+        }
+      },
+      "existingAppName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing Web App/Function App."
+        }
+      },
+      "existingAppLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of existing app service."
+        }
+      }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "keyVaultName": "[split(parameters('existingKeyVaultId'), '/')[8]]",
+        "keyVaultResourceGroup": "[split(parameters('existingKeyVaultId'), '/')[4]]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "resourceGroup": "[variables('keyVaultResourceGroup')]",
+            "name": "[concat(parameters('uniqueString'),'-',variables('keyVaultName'),'-vaultAccessPolicies-Cert')]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/KeyVault/2019-09-01/r01.accessPolicies.vaults.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('keyVaultName')]"
+                    },
+                    "objectId": {
+                        "value": "8e4cc0a7-64d6-4f61-83d4-a190522c58ab"
+                    },
+                    "secrets": {
+                        "value": [
+                            "Get",
+                            "Set",
+                            "Delete"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "comments": "",
+            "resourceGroup": "[variables('keyVaultResourceGroup')]",
+            "name": "[concat(parameters('uniqueString'),'-',variables('keyVaultName'),'-vaultAccessPolicies-App')]",
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "requestContent, responseContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/KeyVault/2019-09-01/r01.accessPolicies.vaults.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('keyVaultName')]"
+                    },
+                    "objectId": {
+                        "value": "a3aeadc1-904d-401b-a6d8-12250e1efd54"
+                    },
+                    "secrets": {
+                        "value": [
+                            "Get"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('certificateOrderName'))]",
+            "dependsOn": [
+                "[concat(parameters('uniqueString'),'-',parameters('certificateOrderName'),'-vaultAccessPolicies')]"
+            ],
+            "properties": {
+                "debugSetting": {
+                    "detailLevel": "ResponseContent, RequestContent"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/AppServiceCertificate/2015-08-01/r01.appServiceCertificate.json',parameters('_artifactsStorageSASToken'))]"
+                },
+                "parameters": {
+                    "productType": {
+                        "value": "[parameters('productType')]"
+                    },
+                    "validytyInYears": {
+                        "value": "[parameters('validytyInYears')]"
+                    },
+                    "tags": {
+                        "value": "[parameters('tags')]"
+                    },
+                    "autoRenew": {
+                        "value": "[parameters('autoRenew')]"
+                    },
+                    "rootHostName": {
+                        "value": "[parameters('rootHostName')]"
+                    },
+                    "certificateOrderName": {
+                        "value": "[parameters('certificateOrderName')]"
+                    },
+                    "existingKeyVaultId": {
+                        "value": "[parameters('existingKeyVaultId')]"
+                    },
+                    "existingAppName": {
+                        "value": "[parameters('existingAppName')]"
+                    },
+                    "existingAppLocation": {
+                        "value": "[parameters('existingAppLocation')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
