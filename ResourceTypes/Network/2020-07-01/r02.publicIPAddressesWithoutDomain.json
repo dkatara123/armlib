@@ -23,13 +23,6 @@
         "addressType": {
             "type": "String",
             "defaultValue": "Dynamic"
-        },
-        "ipAddress": {
-            "type": "String",
-              "metadata": {
-               "description": "description"
-            }
-
         }
     },
     "functions": [
@@ -49,7 +42,7 @@
                 "tier": "[parameters('skuTier')]"
             },
             "properties": {
-                "ipAddress": "[parameters('ipAddress')]",
+                "ipAddress": "",
                 "publicIPAddressVersion": "IPv4",
                 "publicIPAllocationMethod": "[parameters('addressType')]",
                 "idleTimeoutInMinutes": 4,
