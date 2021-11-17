@@ -42,7 +42,6 @@
                 "tier": "[parameters('skuTier')]"
             },
             "properties": {
-                "ipAddress": "",
                 "publicIPAddressVersion": "IPv4",
                 "publicIPAllocationMethod": "[parameters('addressType')]",
                 "idleTimeoutInMinutes": 4,
