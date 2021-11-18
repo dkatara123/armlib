@@ -1,37 +1,37 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "certificateOrderName": {
-        "type": "string",
-        "metadata": {
-          "description": "Name of the Certificate Order."
-        }
-      },
-      "existingAppName": {
-        "type": "string",
-        "metadata": {
-          "description": "Name of the existing Web App/Function App."
-        }
-      },
-      "existingAppLocation": {
-        "type": "string",
-        "metadata": {
-          "description": "Location of existing app service."
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "certificateOrderName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Certificate Order."
       }
     },
-    "variables": {
-    },
-    "resources": [
-        {
-        "type": "Microsoft.Web/sites/domainOwnershipIdentifiers",
-        "name": "[concat(parameters('existingAppName'), concat('/', parameters('certificateOrderName')))]",
-        "apiVersion": "2015-08-01",
-        "location": "[parameters('existingAppLocation')]",
-        "properties": {
-          "id": "[reference(resourceId('Microsoft.CertificateRegistration/certificateOrders', parameters('certificateOrderName'))).DomainVerificationToken]"
-        }
+    "existingAppName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the existing Web App/Function App."
       }
-    ]
+    },
+    "existingAppLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Location of existing app service."
+      }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/sites/domainOwnershipIdentifiers",
+      "name": "[concat(parameters('existingAppName'), concat('/', parameters('certificateOrderName')))]",
+      "apiVersion": "2015-08-01",
+      "location": "[parameters('existingAppLocation')]",
+      "properties": {
+        "id": "[reference(resourceId('Microsoft.CertificateRegistration/certificateOrders', parameters('certificateOrderName'))).DomainVerificationToken]"
+      }
+    }
+  ]
 }
