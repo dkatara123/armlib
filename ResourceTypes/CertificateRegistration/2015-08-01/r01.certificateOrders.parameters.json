@@ -15,19 +15,13 @@
             "value": true
         },
         "rootHostName": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "certificateOrderName": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "existingKeyVaultId": {
-            "value": "" // TODO: Fill in parameter value
-        },
-        "existingAppName": {
-            "value": "" // TODO: Fill in parameter value
-        },
-        "existingAppLocation": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         }
     }
 }

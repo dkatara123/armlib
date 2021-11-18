@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "certificateOrderName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Certificate Order."
+        }
+      },
+      "existingKeyVaultId": {
+        "type": "string",
+        "metadata": {
+          "description": "Key Vault Id for fetching secret."
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.CertificateRegistration/certificateOrders/certificates",
+        "name": "[concat(parameters('certificateOrderName'), concat('/', parameters('certificateOrderName')))]",
+        "apiVersion": "2015-08-01",
+        "location": "global",
+        "dependsOn": [
+          "[resourceId('Microsoft.CertificateRegistration/certificateOrders', parameters('certificateOrderName'))]"
+        ],
+        "properties": {
+          "keyVaultId": "[parameters('existingKeyVaultId')]",
+          "keyVaultSecretName": "[parameters('certificateOrderName')]"
+        }
+      }
+    ],
+    "outputs": {
+    }
+  }
