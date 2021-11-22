@@ -184,7 +184,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2018-11-01/r01.domainOwnershipIdentifiers.sites.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2015-08-01/r01.domainOwnershipIdentifiers.sites.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "certificateOrderName": {
@@ -240,7 +240,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2018-11-01/r01.certificates.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2015-08-01/r01.certificates.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "certificateOrderName": {

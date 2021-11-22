@@ -22,9 +22,6 @@
         "name": "[concat(parameters('certificateOrderName'), concat('/', parameters('certificateOrderName')))]",
         "apiVersion": "2015-08-01",
         "location": "global",
-        "dependsOn": [
-          "[resourceId('Microsoft.CertificateRegistration/certificateOrders', parameters('certificateOrderName'))]"
-        ],
         "properties": {
           "keyVaultId": "[parameters('existingKeyVaultId')]",
           "keyVaultSecretName": "[parameters('certificateOrderName')]"
