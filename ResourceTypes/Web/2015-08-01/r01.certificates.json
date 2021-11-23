@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "certificateOrderName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Certificate Order."
+        }
+      },
+      "serverFarmId": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource Id of App Server Farm."
+        }
+      },
+      "existingAppLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of existing app service."
+        }
+      },
+      "existingKeyVaultId": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource Id of existing Key Vault."
+        }
+      }
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+        "type": "Microsoft.Web/certificates",
+        "name": "[parameters('certificateOrderName')]",
+        "apiVersion": "2015-08-01",
+        "location": "[parameters('existingAppLocation')]",
+        "properties": {
+          "keyVaultId": "[parameters('existingKeyVaultId')]",
+          "keyVaultSecretName": "[parameters('certificateOrderName')]",
+          "serverFarmId": "[parameters('serverFarmId')]"
+        }
+      }
+    ]
+}
