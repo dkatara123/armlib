@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-021",
+  "displayName": "Azure logic app with windows server farm, private endpoint, vnet integration and dns zone. Make sure that decidated subnet (with deligation Microsoft.Web/serverFarms) is created for vnet integration.",
+  "description": ""
+}

@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "logicAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "logic app name"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "serverFarmId": {
+            "type": "string",
+            "metadata": {
+                "description": "app service plan server farm id"
+            }
+        },
+        "virtualNetworkSubnetId": {
+            "type": "string",
+            "metadata": {
+                "description": "virtual network subnet id for vnet integration"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('logicAppName')]",
+            "location": "[parameters('location')]",
+            "kind": "functionapp,workflowapp",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "serverFarmId": "[parameters('serverFarmId')]",
+                "virtualNetworkSubnetId": "[parameters('virtualNetworkSubnetId')]"
+            }
+        }
+    ],
+    "outputs": {}
+}
