@@ -58,6 +58,12 @@
         "metadata": {
           "description": "Location of existing app service."
         }
+      },
+      "serverFarmId": {
+          "type": "string",
+          "metadata": {
+              "description": "Resource Id of Web App Server Farm."
+          }
       }
     },
     "functions": [
@@ -247,7 +253,7 @@
                         "value": "[parameters('certificateOrderName')]"
                     },
                     "serverFarmId": {
-                        "value": "[parameters('certificateOrderName')]"
+                        "value": "[parameters('serverFarmId')]"
                     },
                     "existingAppLocation": {
                         "value": "[parameters('existingKeyVaultId')]"
