@@ -22,7 +22,8 @@
             "apiVersion": "2020-08-01",
             "name": "[concat(parameters('virtualNetworkName'), '/', parameters('subnetName'))]",
             "properties": {
-                "addressPrefix": "[parameters('addressPrefix')]"
+                "addressPrefix": "[parameters('addressPrefix')]",
+                "privateEndpointNetworkPolicies": "Disabled"
             },
             "dependsOn": [
             ]
