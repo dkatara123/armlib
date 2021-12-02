@@ -96,18 +96,24 @@
             "metadata": {
                 "description": "Resource group of virtual network"
             }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage account used for logic app"
+            }
         }
     },
     "variables": {
         "privateEndpointVnetResourceId": "[resourceId(parameters('privateEndpointVnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('privateEndpointVnetName'))]",
-        "logicAppSubnetId": "[resourceId(parameters('logicAppVnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('virtualNetwork'),'/subnets',parameters('virtualNetworkSubnetName'))]"
+        "logicAppSubnetId": "[resourceId(parameters('logicAppVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('virtualNetwork'),parameters('virtualNetworkSubnetName'))]"
     },
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-r01.workflows-',parameters('indexNo'))]"
+                "[concat(parameters('uniqueString'),'-r01.logicApp.sites-',parameters('indexNo'))]"
             ],
             "name": "[concat(parameters('uniqueString'),'-',parameters('logicAppName'),'-pep')]",
             "properties": {
@@ -208,7 +214,7 @@
             }
         },
         {
-            "name": "[concat(parameters('uniqueString'),'-r01.workflows-',parameters('indexNo'))]",
+            "name": "[concat(parameters('uniqueString'),'-r01.logicApp.sites-',parameters('indexNo'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
@@ -217,7 +223,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Logic/2021-02-01/r01.workflows.json',parameters('_artifactsStorageSASToken'))]",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2021-02-01/r01.logicApp.sites.json',parameters('_artifactsStorageSASToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -229,6 +235,9 @@
                     },
                     "virtualNetworkSubnetId": {
                         "value": "[variables('logicAppSubnetId')]"
+                    },
+                    "storageAccountName": {
+                        "value": "[parameters('storageAccountName')]"
                     }
                 },
                 "debugSetting": {
