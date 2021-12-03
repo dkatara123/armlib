@@ -46,24 +46,6 @@
         "metadata": {
           "description": "Key Vault Id for fetching secret."
         }
-      },
-      "existingAppName": {
-        "type": "string",
-        "metadata": {
-          "description": "Name of the existing Web App/Function App."
-        }
-      },
-      "existingAppLocation": {
-        "type": "string",
-        "metadata": {
-          "description": "Location of existing app service."
-        }
-      },
-      "serverFarmId": {
-          "type": "string",
-          "metadata": {
-              "description": "Resource Id of Web App Server Farm."
-          }
       }
     },
     "functions": [
@@ -169,94 +151,6 @@
                     },
                     "certificateOrderName": {
                         "value": "[parameters('certificateOrderName')]"
-                    },
-                    "existingKeyVaultId": {
-                        "value": "[parameters('existingKeyVaultId')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01",
-            "name": "[concat(parameters('uniqueString'),'-domainOwnershipIdentifier')]",
-            "dependsOn": [
-                "[concat(parameters('uniqueString'),'-',parameters('certificateOrderName'))]"
-            ],
-            "properties": {
-                "debugSetting": {
-                    "detailLevel": "ResponseContent, RequestContent"
-                },
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2015-08-01/r01.domainOwnershipIdentifiers.sites.json',parameters('_artifactsStorageSASToken'))]"
-                },
-                "parameters": {
-                    "certificateOrderName": {
-                        "value": "[parameters('certificateOrderName')]"
-                    },
-                    "existingAppName": {
-                        "value": "[parameters('existingAppName')]"
-                    },
-                    "existingAppLocation": {
-                        "value": "[parameters('existingAppLocation')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01",
-            "name": "[concat(parameters('uniqueString'),'-certificate-certificateOrder')]",
-            "dependsOn": [
-                "[concat(parameters('uniqueString'),'-',parameters('certificateOrderName'))]",
-                "[concat(parameters('uniqueString'),'-domainOwnershipIdentifier')]"
-            ],
-            "properties": {
-                "debugSetting": {
-                    "detailLevel": "ResponseContent, RequestContent"
-                },
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/CertificateRegistration/2015-08-01/r01.certificates.certificateOrders.json',parameters('_artifactsStorageSASToken'))]"
-                },
-                "parameters": {
-                    "certificateOrderName": {
-                        "value": "[parameters('certificateOrderName')]"
-                    },
-                    "existingKeyVaultId": {
-                        "value": "[parameters('existingKeyVaultId')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01",
-            "name": "[concat(parameters('uniqueString'),'-certificate-Web')]",
-            "dependsOn": [
-                "[concat(parameters('uniqueString'),'-certificate-certificateOrder')]"
-            ],
-            "properties": {
-                "debugSetting": {
-                    "detailLevel": "ResponseContent, RequestContent"
-                },
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Web/2015-08-01/r01.certificates.json',parameters('_artifactsStorageSASToken'))]"
-                },
-                "parameters": {
-                    "certificateOrderName": {
-                        "value": "[parameters('certificateOrderName')]"
-                    },
-                    "serverFarmId": {
-                        "value": "[parameters('serverFarmId')]"
-                    },
-                    "existingAppLocation": {
-                        "value": "[parameters('existingKeyVaultId')]"
                     },
                     "existingKeyVaultId": {
                         "value": "[parameters('existingKeyVaultId')]"
