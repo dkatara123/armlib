@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-020",
+  "displayName": "App Service Certificate with Key Vault Access Policy.",
+  "description": ""
+}

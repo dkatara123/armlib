@@ -18,14 +18,10 @@
             "value": ""
         },
         "containers": {
-            "value": [
-               
-            ]
+            "value": []
         },
         "fileShares": {
-            "value": [
-               
-            ]
+            "value": []
         },
         "virtualNetworkResourceGroupName": {
             "value": ""
@@ -37,15 +33,18 @@
             "value": ""
         },
         "privateEndpointServices": {
-            "value": [
-               
-            ]
+            "value": []
         },
         "keyVaultName": {
             "value": "" // TODO: Fill in parameter value
         },
         "keyVaultResourceGroup": {
             "value": "" // TODO: Fill in parameter value
+        },
+        "queues": {
+            "value": [
+                // TODO: Fill in parameter value
+            ]
         }
     }
 }

@@ -1,0 +1,2 @@
+# About
+This script was written to populate a private DNS zones with all VMs name and IP. Resource Graph Query was used to list all VMs from the subscription, their Names and IPs. The list was then passed to Powershell script to populate private DNS zone with host A record.

@@ -41,7 +41,7 @@
             "defaultValue": false
         },
         "serverVersion": {
-            "defaultValue": "3.2",
+            "defaultValue": "4.0",
             "allowedValues": [
                 "3.2",
                 "3.6",
@@ -73,7 +73,7 @@
         {
             "name": "[parameters('name')]",
             "type": "Microsoft.DocumentDB/databaseAccounts",
-            "apiVersion": "2020-04-01",
+            "apiVersion": "2021-06-15",
             "location": "[parameters('location')]",
             "tags": {},
             "kind": "[parameters('kind')]",
@@ -109,6 +109,11 @@
                     },
                     {
                         "ipAddressOrRange": "52.187.184.26"
+                    }
+                ],
+                "capabilities": [
+                    {
+                        "name": "EnableServerless"
                     }
                 ]
             },

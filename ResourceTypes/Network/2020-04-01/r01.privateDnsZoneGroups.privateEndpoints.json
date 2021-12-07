@@ -29,7 +29,6 @@
                 "queue",
                 "table",
                 "sites",
-                "database",
                 "MongoDB",
                 "sqlServer",
                 "namespace",
@@ -42,6 +41,8 @@
     "variables": {
         "blob": "privatelink.blob.core.windows.net",
         "file": "privatelink.file.core.windows.net",
+        "queue": "privatelink.queue.core.windows.net",
+        "table": "privatelink.table.core.windows.net",
         "sites": "privatelink.azurewebsites.net",
         "sqlServer": "privatelink.database.windows.net",
         "MongoDB": "privatelink.mongo.cosmos.azure.com",

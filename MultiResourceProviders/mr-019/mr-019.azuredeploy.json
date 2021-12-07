@@ -19,31 +19,60 @@
         "_artifactsStorageContainerUrl": {
             "type": "string"
         },
-        "keyVaultName": {
-            "type": "string"
-        },
-        "networkAcls": {
-            "type": "object",
-            "metadata": {
-                "description": "Rules governing the accessibility of the key vault from specific network locations. "
-            }
-        },
-        "privateEndpointVnetResourceGroup": {
+        "dbAccountName": {
             "type": "string",
             "metadata": {
                 "description": "description"
             }
         },
-        "privateEndpointVnetName": {
+        "kind": {
             "type": "string",
             "metadata": {
                 "description": "description"
             }
         },
-        "privateEndpointSubnetName": {
-            "type": "string",
+        "geoReplicationLocations": {
+            "type": "array",
             "metadata": {
                 "description": "description"
+            },
+            "defaultValue": [
+            ]
+        },
+        "singleGeoReplication": {
+            "type": "bool",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "serverVersion": {
+            "defaultValue": "4.0",
+            "allowedValues": [
+                "3.2",
+                "3.6",
+                "4.0"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the MongoDB server version to use."
+            }
+        },
+        "virtualNetworkResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required."
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Required. The name of the subnet from which the private IP will be allocated."
             }
         },
         "privateEndpointServices": {
@@ -53,49 +82,48 @@
             "type": "bool",
             "metadata": {
                 "description": "description"
-            }
+            },
+            "defaultValue": false
         },
         "workspaceId": {
             "type": "string",
             "metadata": {
                 "description": "description"
-            }
-        },
-        "enabledForTemplateDeployment": {
-            "type": "bool",
-            "metadata": {
-                "description": "Property to specify whether Azure Resource Manager is permitted to retrieve secrets from the key vault."
-            }
-        },
-        "enablePurgeProtection": {
-            "type": "bool",
-            "metadata": {
-                "description": "description"
             },
-            "defaultValue": false
+            "defaultValue": null
         }
     },
     "functions": [
     ],
     "variables": {
-        "privateEndpointVnetResourceId": "[resourceId(parameters('privateEndpointVnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('privateEndpointVnetName'))]"
+        "virtualNetworkResourceId": "[resourceId(parameters('virtualNetworkResourceGroupName'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]"
     },
     "resources": [
         {
-            "name": "[concat(parameters('uniqueString'),'-r01.vaults.json-',parameters('indexNo'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
+            "name": "[concat(parameters('uniqueString'),'-',parameters('dbAccountName'))]",
             "properties": {
+                "debugSetting": {
+                    "detailLevel": "ResponseContent, RequestContent"
+                },
+                "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/KeyVault/2019-09-01/r01.vaults.json',parameters('_artifactsStorageSASToken'))]",
-                    "contentVersion": "1.0.0.0"
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/DocumentDB/2021-06-15/r03.databaseAccounts.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "name": {
-                        "value": "[parameters('keyVaultName')]"
+                        "value": "[parameters('dbAccountName')]"
                     },
-                    "networkAcls": {
-                        "value": "[parameters('networkAcls')]"
+                    "kind": {
+                        "value": "[parameters('kind')]"
+                    },
+                    "geoReplicationLocations": {
+                        "value": "[parameters('geoReplicationLocations')]"
+                    },
+                    "singleGeoReplication": {
+                        "value": "[parameters('singleGeoReplication')]"
                     },
                     "sendDiagnosticsToWorkspace": {
                         "value": "[parameters('sendDiagnosticsToWorkspace')]"
@@ -103,16 +131,9 @@
                     "workspaceId": {
                         "value": "[parameters('workspaceId')]"
                     },
-                    "enabledForTemplateDeployment": {
-                        "value": "[parameters('enabledForTemplateDeployment')]"
-                    },
-                    "enablePurgeProtection": {
-                        "value": "[parameters('enablePurgeProtection')]"
+                    "serverVersion": {
+                        "value": "[parameters('serverVersion')]"
                     }
-                },
-                "mode": "Incremental",
-                "debugSetting": {
-                    "detailLevel": "requestContent, responseContent"
                 }
             }
         },
@@ -120,9 +141,12 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-r01.vaults.json-',parameters('indexNo'))]"
+                "[concat(parameters('uniqueString'),'-',parameters('dbAccountName'))]"
             ],
-            "name": "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-pep')]",
+            "tags": {
+            },
+            "comments": "",
+            "name": "[concat(parameters('uniqueString'),'-pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'))]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -131,16 +155,16 @@
                 },
                 "parameters": {
                     "name": {
-                        "value": "[concat('pep-',parameters('keyVaultName'),'-',parameters('privateEndpointServices'))]"
+                        "value": "[concat('pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'))]"
                     },
                     "virtualNetworkId": {
-                        "value": "[variables('privateEndpointVnetResourceId')]"
+                        "value": "[variables('virtualNetworkResourceId')]"
                     },
                     "subnetName": {
-                        "value": "[parameters('privateEndpointSubnetName')]"
+                        "value": "[parameters('subnetName')]"
                     },
                     "privateLinkServiceId": {
-                        "value": "[resourceId('Microsoft.KeyVault/vaults',parameters('keyVaultName'))]"
+                        "value": "[resourceId('Microsoft.DocumentDB/databaseAccounts',parameters('dbAccountName'))]"
                     },
                     "groupIds": {
                         "value": [
@@ -157,12 +181,12 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-pep')]"
+                "[concat(parameters('uniqueString'),'-pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'))]"
             ],
             "tags": {
             },
             "comments": "",
-            "name": "[concat(parameters('uniqueString'),'-',parameters('keyVaultName'),'-dnszones')]",
+            "name": "[concat(parameters('uniqueString'),'pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'),'-dnszones')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -171,10 +195,10 @@
                 },
                 "parameters": {
                     "privateEndpointName": {
-                        "value": "[concat('pep-',parameters('keyVaultName'),'-',parameters('privateEndpointServices'))]"
+                        "value": "[concat('pep-',parameters('dbAccountName'),'-',parameters('privateEndpointServices'))]"
                     },
                     "virtualNetworkResourceGroupName": {
-                        "value": "[parameters('privateEndpointVnetResourceGroup')]"
+                        "value": "[parameters('virtualNetworkResourceGroupName')]"
                     },
                     "privateDnsZone": {
                         "value": "[parameters('privateEndpointServices')]"

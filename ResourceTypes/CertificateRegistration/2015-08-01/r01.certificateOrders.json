@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "productType": {
+      "type": "string",
+      "allowedValues": [
+        "StandardDomainValidatedSsl",
+        "StandardDomainValidatedWildCardSsl"
+      ],
+      "defaultValue": "StandardDomainValidatedSsl"
+    },
+    "validytyInYears": {
+      "type": "int",
+      "defaultValue": 1
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {}
+    },
+    "autoRenew": {
+      "type": "bool",
+      "defaultValue": true
+    },
+    "rootHostName": {
+      "type": "string"
+    },
+    "certificateOrderName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Certificate Order."
+      }
+    },
+    "existingKeyVaultId": {
+      "type": "string",
+      "metadata": {
+        "description": "Key Vault Id for fetching secret."
+      }
+    }
+  },
+  "variables": {
+    "distinguishedName": "[concat('CN=',parameters('rootHostName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.CertificateRegistration/certificateOrders",
+      "apiVersion": "2015-08-01",
+      "name": "[parameters('certificateOrderName')]",
+      "location": "global",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "autoRenew": "[parameters('autoRenew')]",
+        "distinguishedName": "[variables('distinguishedName')]",
+        "productType": "[parameters('productType')]",
+        "validityInYears": "[parameters('validytyInYears')]"
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
