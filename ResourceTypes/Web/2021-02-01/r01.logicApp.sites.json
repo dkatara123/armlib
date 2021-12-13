@@ -5,7 +5,7 @@
         "logicAppName": {
             "type": "string",
             "metadata": {
-                "description": "logic app name"
+                "description": "Logic app name"
             }
         },
         "location": {
@@ -18,13 +18,13 @@
         "serverFarmId": {
             "type": "string",
             "metadata": {
-                "description": "app service plan server farm id"
+                "description": "App service plan server farm id"
             }
         },
         "virtualNetworkSubnetId": {
             "type": "string",
             "metadata": {
-                "description": "virtual network subnet id for vnet integration"
+                "description": "Virtual network subnet id for vnet integration"
             }
         },
         "storageAccountName": {
@@ -32,7 +32,22 @@
             "metadata": {
                 "description": "Storage account used for logic app"
             }
+        },
+        "workspaceId": {
+            "type": "string",
+            "defaultValue": null
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "defaultValue": false
+        },
+        "applicationInsightName": {
+            "type": "string"
+        },
+        "applicationInsightResourceGroup": {
+            "type": "string"
         }
+
     },
     "resources": [
         {
@@ -45,103 +60,98 @@
                 "type": "SystemAssigned"
             },
             "properties": {
-                "mode": "Incremental",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId(parameters('applicationInsightResourceGroup'),'Microsoft.Insights/components',parameters('applicationInsightName')), '2018-05-01-preview').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[concat('InstrumentationKey=',reference(resourceId(parameters('applicationInsightResourceGroup'),'Microsoft.Insights/components',parameters('applicationInsightName')), '2018-05-01-preview').InstrumentationKey,';IngestionEndpoint=https://eastus-1.in.applicationinsights.azure.com/')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "node"
+                        },
+                        {
+                            "name": "AzureFunctionsJobHost__extensionBundle__version",
+                            "value": "[1.*, 2.0.0)"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(parameters('logicAppName')),take(uniqueString(parameters('logicAppName')),5))]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "APP_KIND",
+                            "value": "workflowApp"
+                        },
+                        {
+                            "name": "WEBSITE_DNS_SERVER",
+                            "value": "168.63.129.16"
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "~12"
+                        },
+                        {
+                            "name": "AzureFunctionsJobHost__extensionBundle__id",
+                            "value": "Microsoft.Azure.Functions.ExtensionBundle.Workflows"
+                        },
+                        {
+                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                            "value": "~2"
+                        }
+                    ],
+                    "use32BitWorkerProcess": true,
+                    "managedPipelineMode": "Integrated",
+                    "loadBalancing": "LeastRequests",
+                    "vnetRouteAllEnabled": true,
+                    "minTlsVersion": "1.2",
+                    "ftpsState": "AllAllowed",
+                    "preWarmedInstanceCount": 1
+                },
                 "serverFarmId": "[parameters('serverFarmId')]",
-                "hostNamesDisabled": false,
                 "httpsOnly": true,
-                "redundancyMode": "None",
-                "storageAccountRequired": false,
                 "keyVaultReferenceIdentity": "SystemAssigned",
                 "virtualNetworkSubnetId": "[parameters('virtualNetworkSubnetId')]"
-                },
-            },
-                    {
-            "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2021-02-01",
-            "name": "[concat(parameters('logicAppName'), '/web')]",
-            "location": "East US",
+            }
+        },
+        {
+            "condition": "[parameters('sendDiagnosticsToWorkspace')]",
+            "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+            "name": "[concat(parameters('logicAppName'),'/Microsoft.Insights/SendToLogAnalytics')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('logicAppName'))]"
+                "[parameters('logicAppName')]"
             ],
+            "apiVersion": "2017-05-01-preview",
             "properties": {
-                "mode": "Incremental",
-                "numberOfWorkers": 1,
-                "defaultDocuments": [
-                    "Default.htm",
-                    "Default.html",
-                    "Default.asp",
-                    "index.htm",
-                    "index.html",
-                    "iisstart.htm",
-                    "default.aspx",
-                    "index.php"
-                ],
-                "appSettings": [
+                "name": "SendToLogAnalytics",
+                "workspaceId": "[parameters('workspaceId')]",
+                "logs": [
                     {
-                        "name": "FUNCTIONS_EXTENSION_VERSION",
-                        "value": "~3"
-                    },
-                    {
-                        "name": "FUNCTIONS_WORKER_RUNTIME",
-                        "value": "node"
-                    },
-                    {
-                        "name": "AzureFunctionsJobHost__extensionBundle__version",
-                        "value": "[1.*, 2.0.0)"
-                    },
-                    {
-                        "name": "AzureWebJobsStorage",
-                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
-                    },
-                    {
-                        "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
-                    },
-                    {
-                        "name": "WEBSITE_CONTENTSHARE",
-                        "value": "[concat(toLower(parameters('logicAppName')), 'a4b4')]"
-                    },
-                    {
-                        "name": "APP_KIND",
-                        "value": "workflowApp"
-                    },
-                    {
-                        "name": "WEBSITE_DNS_SERVER",
-                        "value": "168.63.129.16"
-                    },
-                    {
-                        "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                        "value": "~12"
-                    },
-                    {
-                        "name": "AzureFunctionsJobHost__extensionBundle__id",
-                        "value": "Microsoft.Azure.Functions.ExtensionBundle.Workflows"
+                        "category": "FunctionAppLogs",
+                        "enabled": true
                     }
                 ],
-                "netFrameworkVersion": "v4.0",
-                "phpVersion": "5.6",
-                "remoteDebuggingVersion": "VS2019",
-                "use32BitWorkerProcess": true,
-                "managedPipelineMode": "Integrated",
-                "virtualApplications": [
+                "metrics": [
                     {
-                        "virtualPath": "/",
-                        "physicalPath": "site\\wwwroot",
-                        "preloadEnabled": false
+                        "category": "AllMetrics",
+                        "enabled": true
                     }
-                ],
-                "loadBalancing": "LeastRequests",
-                "experiments": {
-                    "rampUpRules": []
-                },
-                "vnetRouteAllEnabled": true,
-                "vnetPrivatePortsCount": 0,
-                "minTlsVersion": "1.2",
-                "scmMinTlsVersion": "1.0",
-                "ftpsState": "AllAllowed",
-                "preWarmedInstanceCount": 1,
-                "minimumElasticInstanceCount": 1,
-                "azureStorageAccounts": {}
+                ]
             }
         }
     ],
