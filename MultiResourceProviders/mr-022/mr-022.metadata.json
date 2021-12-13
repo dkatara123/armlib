@@ -1,0 +1,6 @@
+{
+  "type": "MultiResourceProviders",
+  "Id": "mr-022",
+  "displayName": "App Service Certificate Domain Ownership verification.",
+  "description": ""
+}
