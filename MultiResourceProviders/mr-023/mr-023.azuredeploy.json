@@ -43,6 +43,12 @@
                 "description": "function app name"
             }
         },
+        "cors": {
+            "type": "array",
+            "metadata": {
+                "description": "allowed cross origin resource sharing urls"
+            }
+        },
         "virtualNetworkSubnetName": {
             "type": "string",
             "metadata": {
@@ -227,6 +233,9 @@
                     },
                     "serverFarmId": {
                         "value": "[resourceId('Microsoft.Web/serverfarms',parameters('serverFarmName'))]"
+                    },
+                    "cors": {
+                        "value": "[parameters('cors')]"
                     },
                     "virtualNetworkSubnetId": {
                         "value": "[variables('functionAppSubnetId')]"
