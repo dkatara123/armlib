@@ -1,6 +1,6 @@
 {
   "type": "MultiResourceProviders",
-  "Id": "mr-001",
+  "Id": "mr-025",
   "displayName": "Service bus with topics, queues and private endpoints.",
   "description": ""
 }
