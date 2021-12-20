@@ -72,7 +72,6 @@
             "apiVersion": "2019-10-01",
             "name": "[concat(parameters('uniqueString'),'-certificate-certificateOrder')]",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-',parameters('certificateOrderName'))]",
                 "[concat(parameters('uniqueString'),'-domainOwnershipIdentifier')]"
             ],
             "properties": {

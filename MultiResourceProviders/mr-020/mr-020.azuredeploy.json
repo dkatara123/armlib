@@ -122,7 +122,8 @@
             "apiVersion": "2019-10-01",
             "name": "[concat(parameters('uniqueString'),'-',parameters('certificateOrderName'))]",
             "dependsOn": [
-                "[concat(parameters('uniqueString'),'-',parameters('certificateOrderName'),'-vaultAccessPolicies')]"
+                "[concat(parameters('uniqueString'),'-',variables('keyVaultName'),'-vaultAccessPolicies-App')]",
+                "[concat(parameters('uniqueString'),'-',variables('keyVaultName'),'-vaultAccessPolicies-Cert')]"
             ],
             "properties": {
                 "debugSetting": {
@@ -131,7 +132,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/CertificateRegistraion/2015-08-01/r01.certificateOrders.json',parameters('_artifactsStorageSASToken'))]"
+                    "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/CertificateRegistration/2015-08-01/r01.certificateOrders.json',parameters('_artifactsStorageSASToken'))]"
                 },
                 "parameters": {
                     "productType": {
