@@ -1,0 +1,156 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "functionAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "function app name"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "serverFarmId": {
+            "type": "string",
+            "metadata": {
+                "description": "App service plan server farm id"
+            }
+        },
+        "cors": {
+            "type": "array",
+            "metadata": {
+                "description": "allowd cross origin resource sharing urls"
+            }
+        },
+        "virtualNetworkSubnetId": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual network subnet id for vnet integration"
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage account used for logic app"
+            }
+        },
+        "workspaceId": {
+            "type": "string",
+            "defaultValue": null
+        },
+        "sendDiagnosticsToWorkspace": {
+            "type": "bool",
+            "defaultValue": false
+        },
+        "applicationInsightName": {
+            "type": "string"
+        },
+        "applicationInsightResourceGroup": {
+            "type": "string"
+        }
+
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('functionAppName')]",
+            "location": "[parameters('location')]",
+            "kind": "functionapp",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId(parameters('applicationInsightResourceGroup'),'Microsoft.Insights/components',parameters('applicationInsightName')), '2018-05-01-preview').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[concat('InstrumentationKey=',reference(resourceId(parameters('applicationInsightResourceGroup'),'Microsoft.Insights/components',parameters('applicationInsightName')), '2018-05-01-preview').InstrumentationKey,';IngestionEndpoint=https://eastus-1.in.applicationinsights.azure.com/')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(parameters('functionAppName')),take(uniqueString(parameters('functionAppName')),5))]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_DNS_SERVER",
+                            "value": "168.63.129.16"
+                        },
+                        {
+                            "name": "WEBSITE_ENABLE_SYNC_UPDATE_SITE",
+                            "value": "true"
+                        },
+                        {
+                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                            "value": "~2"
+                        }
+                    ],
+                    "use32BitWorkerProcess": true,
+                    "managedPipelineMode": "Integrated",
+                    "loadBalancing": "LeastRequests",
+                    "vnetRouteAllEnabled": true,
+                    "cors": {
+                        "allowedOrigins": "[parameters('cors')]"
+                    },
+                    "minTlsVersion": "1.2",
+                    "ftpsState": "AllAllowed",
+                    "preWarmedInstanceCount": 1
+                },
+                "serverFarmId": "[parameters('serverFarmId')]",
+                "httpsOnly": true,
+                "keyVaultReferenceIdentity": "SystemAssigned",
+                "virtualNetworkSubnetId": "[parameters('virtualNetworkSubnetId')]"
+            }
+        },
+        {
+            "condition": "[parameters('sendDiagnosticsToWorkspace')]",
+            "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+            "name": "[concat(parameters('functionAppName'),'/Microsoft.Insights/SendToLogAnalytics')]",
+            "dependsOn": [
+                "[parameters('functionAppName')]"
+            ],
+            "apiVersion": "2017-05-01-preview",
+            "properties": {
+                "name": "SendToLogAnalytics",
+                "workspaceId": "[parameters('workspaceId')]",
+                "logs": [
+                    {
+                        "category": "FunctionAppLogs",
+                        "enabled": true
+                    }
+                ],
+                "metrics": [
+                    {
+                        "category": "AllMetrics",
+                        "enabled": true
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {}
+}
