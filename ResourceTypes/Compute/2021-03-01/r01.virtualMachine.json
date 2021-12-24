@@ -1,0 +1,100 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "virtual machine name"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+      },
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "virtual machine size"
+      }
+    },
+    "userName": {
+      "type": "string",
+      "metadata": {
+        "description": "optional. virtual machine admin user name "
+      },
+      "defaultValue": "vmadmin"
+    },
+    "password": {
+      "type": "secureString",
+      "metadata": {
+        "description": "virtual machine admin password"
+      }
+    },
+    "customImageID": {
+      "type": "string",
+      "metadata": {
+        "description": "custom image ID"
+      }
+    },
+    "createOption": {
+      "type": "string",
+      "metadata": {
+        "description": "os disk create option"
+      }
+    },
+    "osDiskType": {
+      "type": "string",
+      "metadata": {
+        "description": "os disk type"
+      }
+    },
+    "networkInterfaceID": {
+      "type": "string",
+      "metadata": {
+        "description": "network interface id"
+      }
+    }
+  },
+  "functions": [],
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2021-03-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('name')]",
+          "adminUsername": "[parameters('userName')]",
+          "adminPassword": "[parameters('password')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "id": "[parameters('customImageID')]"
+          },
+          "osDisk": {
+            "createOption": "[parameters('createOption')]",
+            "managedDisk": {
+              "storageAccountType": "[parameters('osDiskType')]"
+            }
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[parameters('networkInterfaceID')]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

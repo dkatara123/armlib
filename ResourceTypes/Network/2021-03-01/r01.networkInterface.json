@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "network interface name"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Optional. Resource location. If not provided, by default it will take resource group location."
+      },
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "subnetID": {
+      "type": "string",
+      "metadata": {
+        "description": "network interface subnet ID"
+      }
+    }
+  },
+  "functions": [],
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2021-03-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "[concat(parameters('name'),'-nic-ipconfig')]",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[parameters('subnetID')]"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

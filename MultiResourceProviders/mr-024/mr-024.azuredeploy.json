@@ -1,0 +1,124 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "uniqueString": {
+      "type": "string",
+      "defaultValue": "[substring(uniqueString(utcNow('MMddyyHHmmss')),0,4)]"
+    },
+    "_artifactsStorageSASToken": {
+      "type": "securestring"
+    },
+    "_artifactsStorageContainerUrl": {
+      "type": "string"
+    },
+    "vmName": {
+      "type": "string"
+    },
+    "vmSize": {
+      "type": "string"
+    },
+    "vmPassword": {
+      "type": "secureString"
+    },
+    "customImageRG": {
+      "type": "string"
+    },
+    "customImageName": {
+      "type": "string"
+    },
+    "createOption": {
+      "type": "string"
+    },
+    "osDiskType": {
+      "type": "string"
+    },
+    "vnetRG": {
+      "type": "string"
+    },
+    "vnetName": {
+      "type": "string"
+    },
+    "subnetName": {
+      "type": "string"
+    },
+    "vmRG": {
+      "type": "string"
+    }
+  },
+  "functions": [
+  ],
+  "variables": {
+    "subnetID": "[resourceId(parameters('vnetRG'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]",
+    "customImageID": "[resourceId(parameters('customImageRG'),'Microsoft.Compute/images',parameters('customImageName'))]",
+    "networkInterfaceID": "[resourceId(parameters('vmRG'), 'Microsoft.Network/networkInterfaces', concat('nic-',parameters('vmName')))]"
+
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "[concat(parameters('uniqueString'),parameters('vmName'),'-nic')]",
+      "properties": {
+        "debugSetting": {
+          "detailLevel": "ResponseContent, RequestContent"
+        },
+        "mode": "Incremental",
+        "templateLink": {
+          "contentVersion": "1.0.0.0",
+          "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Network/2021-03-01/r01.networkInterface.json',parameters('_artifactsStorageSASToken'))]"
+        },
+        "parameters": {
+          "name": {
+            "value": "[concat('nic-',parameters('vmName'))]"
+          },
+          "subnetID": {
+            "value": "[variables('subnetID')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "[concat(parameters('uniqueString'),'-',parameters('vmName'))]",
+      "dependsOn": [
+        "[concat(parameters('uniqueString'),parameters('vmName'),'-nic')]"
+      ],
+      "properties": {
+        "debugSetting": {
+          "detailLevel": "ResponseContent, RequestContent"
+        },
+        "mode": "Incremental",
+        "templateLink": {
+          "contentVersion": "1.0.0.0",
+          "uri": "[concat(parameters('_artifactsStorageContainerUrl'),'/Spectrum-ARM-Library/ResourceTypes/Compute/2021-03-01/r01.virtualMachine.json',parameters('_artifactsStorageSASToken'))]"
+        },
+        "parameters": {
+          "name": {
+            "value": "[parameters('vmName')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "password": {
+            "value": "[parameters('vmPassword')]"
+          },
+          "customImageID": {
+            "value": "[variables('customImageID')]"
+          },
+          "createOption": {
+            "value": "[parameters('createOption')]"
+          },
+          "osDiskType": {
+            "value": "[parameters('osDiskType')]"
+          },
+          "networkInterfaceID": {
+            "value": "[variables('networkInterfaceID')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}
